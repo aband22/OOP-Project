@@ -17,6 +17,10 @@
                 height: 4rem;
                 border-radius: .75rem;
             }
+
+            a {
+              text-decoration: none;
+            }
     </style>
 </head>
 <body>
@@ -29,16 +33,16 @@
               </a>
               <ul class="nav justify-content-end">
                 <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="#"><img src="photos/bell-fill.svg" alt="Logo" width="20" height="20"></a>
+                  <a class="nav-link active" aria-current="page" href="notifications"><img src="photos/bell-fill.svg" alt="Logo" width="20" height="20"></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#"><img src="photos/chat-right-quote-fill.svg" alt="Logo" width="20" height="20"></a>
+                  <a class="nav-link" href="chat"><img src="photos/chat-right-quote-fill.svg" alt="Logo" width="20" height="20"></a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#"><img src="photos/person-circle.svg" alt="Logo" width="20" height="20"></a>
+                  <a class="nav-link" href="user"><img src="photos/person-circle.svg" alt="Logo" width="20" height="20"></a>
                 </li>
                 <li class="nav-item">
-                    <button class="btn btn-warning" type="submit">გამოსვლა</button>
+                    <a class="btn btn-warning" href="login">გამოსვლა</a>
                 </li>
               </ul>
             </div>
@@ -47,14 +51,14 @@
     <div class="container">
         <div class = "searchBar">
             <form class="d-flex" role="search" action = "home" method = "get">
-                <input class="form-control me-2" type="search" placeholder="ძებნა" aria-label="ძებნა">
+                <input class="form-control me-2" type="search" placeholder="ძებნა" aria-label="ძებნა" name="search">
                 <button class="btn btn-outline-warning" type="submit">ძებნა</button>
             </form>
         </div>
     </div>
     <div class="container">
         <div class = "categories">
-            <div class="regac">
+            <div>
                 <nav class="navbar bg-body-tertiary">
                     <div class="container-fluid">
                     <a class="navbar-brand">
@@ -93,14 +97,14 @@
                                                 for(int i = 0; i < k; i++){
                                                     String color = colors.get(i % colors.size());
                                                     String category = categories.get(i); %>
-                                                <div class="col-md-2" type="submit">
+                                                <a class="col-md-2" href="home?category=<%=category%>">
                                                     <div class="card text-bg-<%=color%> mb-3" style="max-width: 18rem;">
                                                         <div class="card-header"><%=category%></div>
                                                         <div class="card-body">
 
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </a>
                                         <% } %>
                                     </div>
                                 </div>
@@ -115,14 +119,14 @@
                                             <% for(int j = i * 6; j < i * 6 + k; j++){
                                                     String color = colors.get(j % colors.size());
                                                     String category = categories.get(j); %>
-                                                <div class="col-md-2" type="submit">
+                                                <a class="col-md-2" href="home?category=<%=category%>">
                                                     <div class="card text-bg-<%=color%> mb-3" style="max-width: 18rem;">
                                                         <div class="card-header"><%=category%></div>
                                                         <div class="card-body">
 
                                                         </div>
                                                     </div>
-                                                </div>
+                                                </a>
                                             <% } %>
                                         </div>
                                     </div>
@@ -134,6 +138,12 @@
             </div>
         </div>
     </div>
+
+    <% SqlQuizDao store = (SqlQuizDao)application.getAttribute("quizzes_db");
+       List<Quiz> popularQuizzes = store.getPopularQuizzes(9);
+       List<Quiz> recentQuizzes = store.getRecentQuizzes(9);
+    %>
+
     <div class="container">
         <div class = "popular">
             <div class="container px-4 py-5" id="custom-cards">
@@ -144,18 +154,26 @@
                     პოპულარული
                 </h2>
 
+                <% for(int i = 0; i < popularQuizzes.size(); i++){
+                        Quiz quiz = popularQuizzes.get(i);
+                        int quizId = quiz.getId();
+                        String name = quiz.getTitle();
+                        String category = quiz.getCategory();
+                        int owner = quiz.getAccount().getId();
+                        long uploadTime = quiz.getCreationDate();
+                %>
                 <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-                    <div class="col" type="submit">
+                    <a class="col" href="quiz?quizID=<%=quizId%>">
                         <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('unsplash-photo-1.jpg');">
                             <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Short title, long jacket</h3>
+                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><%=name%></h3>
                                     <ul class="d-flex list-unstyled mt-auto">
                                     <li class="me-auto">
                                         <img src="moai.jpg" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
                                     </li>
                                     <li class="d-flex align-items-center me-3">
                                         <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
-                                        <small>Earth</small>
+                                        <small><%=category%></small>
                                     </li>
                                     <li class="d-flex align-items-center">
                                         <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
@@ -164,9 +182,9 @@
                                     </ul>
                             </div>
                         </div>
-                    </div>
-
+                    </a>
                 </div>
+                <% } %>
             </div>
         </div>
     </div>
@@ -180,28 +198,37 @@
                     ახალი ქვიზები
                 </h2>
 
+                <% for(int i = 0; i < recentQuizzes.size(); i++){
+                        Quiz quiz = recentQuizzes.get(i);
+                        int quizId = quiz.getId();
+                        String name = quiz.getTitle();
+                        String category = quiz.getCategory();
+                        int owner = quiz.getAccount().getId();
+                        long uploadTime = quiz.getCreationDate();
+                %>
                 <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
-                        <div class="col" type="submit">
-                            <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('unsplash-photo-1.jpg');">
-                                <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                                        <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold">Short title, long jacket</h3>
-                                        <ul class="d-flex list-unstyled mt-auto">
-                                        <li class="me-auto">
-                                            <img src="moai.jpg" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
-                                        </li>
-                                        <li class="d-flex align-items-center me-3">
-                                            <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
-                                            <small>Earth</small>
-                                        </li>
-                                        <li class="d-flex align-items-center">
-                                            <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
-                                            <small>3d</small>
-                                        </li>
-                                        </ul>
-                                </div>
+                    <a class="col" href="quiz?quizID=<%=quizId%>">
+                        <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('unsplash-photo-1.jpg');">
+                            <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
+                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><%=name%></h3>
+                                    <ul class="d-flex list-unstyled mt-auto">
+                                    <li class="me-auto">
+                                        <img src="moai.jpg" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
+                                    </li>
+                                    <li class="d-flex align-items-center me-3">
+                                        <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
+                                        <small><%=category%></small>
+                                    </li>
+                                    <li class="d-flex align-items-center">
+                                        <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
+                                        <small>3d</small>
+                                    </li>
+                                    </ul>
                             </div>
                         </div>
+                    </a>
                 </div>
+                <% } %>
             </div>
         </div>
     </div>

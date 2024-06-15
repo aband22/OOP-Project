@@ -3,6 +3,10 @@ package Accounts;
 import java.util.List;
 
 public class Account {
+    private static final int NO_ID = -1;
+
+
+    private int id;
     private String email;
     private String password;
     private String username;
@@ -15,6 +19,11 @@ public class Account {
         this.email = email;
         this.password = passwordHash;
         this.username = username;
+        this.id = NO_ID;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public String getEmail() {
@@ -27,6 +36,10 @@ public class Account {
 
     public String getUsername() {
         return username;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public void setEmail(String email) {

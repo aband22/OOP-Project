@@ -21,6 +21,10 @@ public class SqlAccountDao implements AccountDao {
         statement.setString(2, acc.getUsername());
         statement.setString(3, acc.getPassword());
         statement.executeUpdate();
+
+        ResultSet rs = statement.getGeneratedKeys();
+        rs.next();
+        acc.setId(rs.getInt(1));
     }
 
     @Override
@@ -36,7 +40,7 @@ public class SqlAccountDao implements AccountDao {
         );
         String result = "";
         if(rs.next()){
-            result = rs.getString(3);
+            result = rs.getString(4);
         }
         return result;
     }
@@ -49,7 +53,7 @@ public class SqlAccountDao implements AccountDao {
         );
         String result = "";
         if(rs.next()){
-            result = rs.getString(2);
+            result = rs.getString(3);
         }
         return result;
     }

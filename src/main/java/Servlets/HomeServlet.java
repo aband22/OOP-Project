@@ -1,5 +1,8 @@
 package Servlets;
 
+import Quizzes.Quiz;
+import Quizzes.SqlQuizDao;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -14,7 +17,17 @@ import java.util.List;
 public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
+        SqlQuizDao store = (SqlQuizDao) request.getServletContext().getAttribute("quizzes_db");
+        String category = request.getParameter("category");
+        List<Quiz> foundedQuizzes;
+        if(category != null){
+            foundedQuizzes = store.getQuizByCategory(category);
+        } else {
+            String searchedItem = request.getParameter("search");
+            foundedQuizzes = store.getQuizzesFromSearch(searchedItem);
+        }
+        request.getServletContext().setAttribute("quizzes", foundedQuizzes);
+        request.getRequestDispatcher("/SearchPage.jsp").forward(request, response);
     }
 
     @Override

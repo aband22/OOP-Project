@@ -6,6 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
+    private static final int NO_ID = -1;
+
+
+    private int id;
     private String title;
     private String category;
     private long creationDate;
@@ -18,10 +22,19 @@ public class Quiz {
         this.creationDate = creationDate;
         this.questions = questions != null ? questions : new ArrayList<Question>();
         this.acc = acc;
+        this.id = NO_ID;
     }
 
     public Quiz() {
         this.questions = new ArrayList<>();
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public long getCreationDate() {

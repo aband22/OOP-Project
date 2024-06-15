@@ -9,5 +9,5 @@ public interface QuizDao {
     List<Quiz> getPopularQuizzes(int num);
     List<Quiz> getRecentQuizzes(int num);
     List<String> getQuizCategories();
-
+    List<Quiz> getQuizzesFromSearch(String search);
 }

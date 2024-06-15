@@ -1,9 +1,6 @@
 package Quizzes;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -24,26 +21,30 @@ public class SqlQuizDao implements QuizDao{
         statement.setString(4, "SYSDATE");
         statement.setInt(5, 0);
         statement.executeUpdate();
+
+        ResultSet rs = statement.getGeneratedKeys();
+        rs.next();
+        quiz.setId(rs.getInt(1));
     }
 
     @Override
     public List<Quiz> getAll() {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<Quiz> getQuizByCategory(String category) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<Quiz> getPopularQuizzes(int num) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
     public List<Quiz> getRecentQuizzes(int num) {
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -51,5 +52,10 @@ public class SqlQuizDao implements QuizDao{
         List<String> r = new ArrayList<>();
         Collections.addAll(r, "სპორტი", "მუსიკა", "ხელოვნება", "ფილმები", "ისტორია", "გეოგრაფია", "ცნობილი ადამიანები", "ქვეყნები", "თეატრი", "თამაშები");
         return r;
+    }
+
+    @Override
+    public List<Quiz> getQuizzesFromSearch(String search) {
+        return new ArrayList<>();
     }
 }

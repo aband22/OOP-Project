@@ -55,14 +55,12 @@ public class LoginServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-
         PasswordHashMaker passHash;
         try {
             passHash = new PasswordHashMaker(password);
         } catch (NoSuchAlgorithmException e) {
             throw new RuntimeException(e);
         }
-
         if(!Objects.equals(passFromDB, passHash.getPasswordHash())){
             request.getRequestDispatcher("/IllegalLoginPage.jsp").forward(request, response);
             return;
