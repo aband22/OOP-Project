@@ -8,5 +8,6 @@ public interface AccountDao {
     List<Account> getAll();
     String getAccPass(String email) throws SQLException;
     String getUserName(String email) throws SQLException;
+    int getUserID(String email) throws SQLException;
     boolean emailExist(String email) throws SQLException;
 }

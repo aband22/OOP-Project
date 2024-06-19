@@ -5,6 +5,7 @@ import Accounts.SqlAccountDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,6 +15,8 @@ import java.sql.SQLException;
 
 @WebServlet("/signUp")
 public class SignUpServlet extends HttpServlet {
+    private static final String USER = "user";
+    private static final String ILLEGAL = "illegal";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getRequestDispatcher("/SignUpPage.jsp").forward(request, response);
@@ -31,7 +34,8 @@ public class SignUpServlet extends HttpServlet {
 
         try {
             if(db.emailExist(email)){
-                request.getRequestDispatcher("/AccInUsePage.jsp").forward(request, response);
+                response.addCookie(new Cookie(ILLEGAL, ILLEGAL));
+                request.getRequestDispatcher("/SignUpPage.jsp").forward(request, response);
                 return;
             }
         } catch (SQLException e) {
@@ -53,7 +57,13 @@ public class SignUpServlet extends HttpServlet {
         }
 
         request.getServletContext().setAttribute("username", username);
-        request.getRequestDispatcher("home").forward(request, response);
+        try {
+            response.addCookie(new Cookie(USER, "" + db.getUserID(email)));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        response.sendRedirect("home");
+        //request.getRequestDispatcher("home").forward(request, response);
     }
 
     private void checkEmptyFields(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

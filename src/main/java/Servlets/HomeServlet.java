@@ -17,13 +17,19 @@ import java.util.List;
 public class HomeServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        SqlQuizDao store = (SqlQuizDao) request.getServletContext().getAttribute("quizzes_db");
         String category = request.getParameter("category");
+        String searchedItem = request.getParameter("search");
+        if(category == null && searchedItem == null){
+            List<String> colors = new ArrayList<>();
+            Collections.addAll(colors,"dark", "info", "warning", "danger", "success", "secondary", "primary");
+            request.getServletContext().setAttribute("colors", colors);
+            request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
+        }
+        SqlQuizDao store = (SqlQuizDao) request.getServletContext().getAttribute("quizzes_db");
         List<Quiz> foundedQuizzes;
         if(category != null){
             foundedQuizzes = store.getQuizByCategory(category);
         } else {
-            String searchedItem = request.getParameter("search");
             foundedQuizzes = store.getQuizzesFromSearch(searchedItem);
         }
         request.getServletContext().setAttribute("quizzes", foundedQuizzes);
@@ -32,9 +38,6 @@ public class HomeServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        List<String> colors = new ArrayList<>();
-        Collections.addAll(colors,"dark", "info", "warning", "danger", "success", "secondary", "primary");
-        request.getServletContext().setAttribute("colors", colors);
-        request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
+
     }
 }

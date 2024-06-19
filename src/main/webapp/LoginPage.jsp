@@ -20,6 +20,11 @@
 <body>
     <img class="mb-4" src="photos/moai.jpg" alt="" width="72" height="72">
     <h1>SigmaQuiz </h1>
+    <c:choose>
+        <c:when test="${illegal != null}">
+            <h6 style="color: red">ელფოსტა ან პაროლი არასწორია, სცადეთ თავიდან</h6>
+        </c:when>
+    </c:choose>
     <div class = "login">
         <form action = "login" method = "post">
             <input class="form-control me-2" type="email" placeholder="ელფოსტა" aria-label="Search" name = "email" id = "email">

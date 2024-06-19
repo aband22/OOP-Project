@@ -59,6 +59,19 @@ public class SqlAccountDao implements AccountDao {
     }
 
     @Override
+    public int getUserID(String email) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(
+                "SELECT * FROM accounts Where email_address = " + '"' + email + '"'
+        );
+        int result = 0;
+        if(rs.next()){
+            result = rs.getInt(1);
+        }
+        return result;
+    }
+
+    @Override
     public boolean emailExist(String email) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(

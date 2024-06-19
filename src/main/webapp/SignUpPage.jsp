@@ -19,6 +19,11 @@
 </head>
 <body>
     <h1>რეგისტრაცია</h1>
+    <c:choose>
+        <c:when test="${illegal != null}">
+            <h6 style="color: red">მითითებული ელფოსტა უკვე გამოყენებულია</h6>
+        </c:when>
+    </c:choose>
     <div class = "signUp">
         <form action = "signUp" method = "post">
             <input class="form-control me-2" type="email" placeholder="ელფოსტა" aria-label="Search" name = "email" id = "email">
