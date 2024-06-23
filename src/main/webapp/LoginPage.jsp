@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ page isELIgnored="false" %>
 <html>
 <head>
     <title>SigmaQuiz</title>
@@ -18,7 +20,9 @@
     </style>
 </head>
 <body>
-    <img class="mb-4" src="photos/moai.jpg" alt="" width="72" height="72">
+    <a href = "home">
+        <img class="mb-4" src="photos/moai.jpg" alt="" width="72" height="72">
+    </a>
     <h1>SigmaQuiz </h1>
     <c:choose>
         <c:when test="${illegal != null}">

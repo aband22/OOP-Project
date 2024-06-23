@@ -19,6 +19,14 @@ public class SignUpServlet extends HttpServlet {
     private static final String ILLEGAL = "illegal";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+//        Cookie[] cookies = request.getCookies();
+//        if (cookies != null) {
+//            for (Cookie c : cookies) {
+//                if (c.getName().equals(USER)) {
+//                    request.removeAttribute(USER);
+//                }
+//            }
+//        }
         request.getRequestDispatcher("/SignUpPage.jsp").forward(request, response);
     }
 
@@ -34,7 +42,8 @@ public class SignUpServlet extends HttpServlet {
 
         try {
             if(db.emailExist(email)){
-                response.addCookie(new Cookie(ILLEGAL, ILLEGAL));
+                //response.addCookie(new Cookie(ILLEGAL, ILLEGAL));
+                request.setAttribute(ILLEGAL, ILLEGAL);
                 request.getRequestDispatcher("/SignUpPage.jsp").forward(request, response);
                 return;
             }

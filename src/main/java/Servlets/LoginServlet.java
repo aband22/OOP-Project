@@ -17,8 +17,10 @@ import java.util.Objects;
 public class LoginServlet extends HttpServlet {
     private static final String USER = "user";
     private static final String ILLEGAL = "illegal";
+    private static final String LOGGED_IN_STATUS = "logged_in_status";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        request.getServletContext().removeAttribute(LOGGED_IN_STATUS);
         request.getRequestDispatcher("/LoginPage.jsp").forward(request, response);
 //        ServletContext context = request.getServletContext();
 //        AccountDao store;
@@ -52,7 +54,7 @@ public class LoginServlet extends HttpServlet {
 
         try {
             if(!db.emailExist(email)){
-                response.addCookie(new Cookie(ILLEGAL, ILLEGAL));
+                request.setAttribute(ILLEGAL, ILLEGAL);
                 request.getRequestDispatcher("/LoginPage.jsp").forward(request, response);
                 return;
             }
@@ -66,7 +68,7 @@ public class LoginServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
         if(!Objects.equals(passFromDB, passHash.getPasswordHash())){
-            response.addCookie(new Cookie(ILLEGAL, ILLEGAL));
+            request.setAttribute(ILLEGAL, ILLEGAL);
             request.getRequestDispatcher("/LoginPage.jsp").forward(request, response);
             return;
         }
@@ -82,6 +84,7 @@ public class LoginServlet extends HttpServlet {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        request.getServletContext().setAttribute(LOGGED_IN_STATUS, "in");
         response.sendRedirect("home");
         //request.getRequestDispatcher("home").forward(request, response);
     }
