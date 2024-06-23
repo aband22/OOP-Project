@@ -131,3 +131,7 @@ $RECYCLE.BIN/
 *.rar
 hs_err_pid*
 /src/database/DBInfo.java
+
+
+
+pom.xml
