@@ -5,8 +5,8 @@ import Quizzes.Quiz;
 import java.util.List;
 
 public interface AccountInfoDao {
-    void addFriend(Account acc);
+    void addFriend(int accountId);
     void addQuiz(Quiz quiz);
-    List<Quiz> getCreatedQuizzes(Account acc);
-    List<Account> getAllFriends(Account acc);
+    List<Quiz> getCreatedQuizzes(int accountId);
+    List<Account> getAllFriends(int accountId);
 }

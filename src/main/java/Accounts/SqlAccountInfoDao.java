@@ -13,7 +13,7 @@ public class SqlAccountInfoDao implements AccountInfoDao {
     }
 
     @Override
-    public void addFriend(Account acc) {
+    public void addFriend(int accountId) {
 
     }
 
@@ -23,12 +23,12 @@ public class SqlAccountInfoDao implements AccountInfoDao {
     }
 
     @Override
-    public List<Quiz> getCreatedQuizzes(Account acc) {
+    public List<Quiz> getCreatedQuizzes(int accountId) {
         return null;
     }
 
     @Override
-    public List<Account> getAllFriends(Account acc) {
+    public List<Account> getAllFriends(int accountId) {
         return null;
     }
 }

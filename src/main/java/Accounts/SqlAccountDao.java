@@ -1,8 +1,5 @@
 package Accounts;
 
-import Accounts.Account;
-import Accounts.AccountDao;
-
 import java.sql.*;
 import java.util.List;
 
@@ -83,4 +80,24 @@ public class SqlAccountDao implements AccountDao {
         }
         return count == 1;
     }
+
+    @Override
+    public Account GetAccountById(int accountId) throws SQLException {
+        String acc = "select * from accounts where account_id = ?";
+        PreparedStatement statement = connection.prepareStatement(acc);
+        statement.setInt(1,accountId);
+        ResultSet rs = statement.executeQuery();
+        if(rs.next()){
+            Account account  = new Account();
+            account.setEmail(rs.getString("email_address"));
+            account.setId(rs.getInt("account_id"));
+            account.setUsername(rs.getString("username"));
+            account.setPassword(rs.getString("password_hash"));
+            return account;
+
+        }
+        return null;
+    }
+
+   // public void editAccount(Account acc){}
 }
