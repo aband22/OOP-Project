@@ -43,7 +43,7 @@
                           <a class="nav-link" href="chat"><img src="photos/chat-right-quote-fill.svg" alt="Logo" width="20" height="20"></a>
                         </li>
                         <li class="nav-item">
-                          <a class="nav-link" href="user?user=${user}"><img src="photos/person-circle.svg" alt="Logo" width="20" height="20"></a>
+                          <a class="nav-link" href="user?user=${curUser}"><img src="photos/person-circle.svg" alt="Logo" width="20" height="20"></a>
                         </li>
                         <li class="nav-item">
                             <a class="btn btn-warning" href="login">გამოსვლა</a>

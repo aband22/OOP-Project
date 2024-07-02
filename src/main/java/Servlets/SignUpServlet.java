@@ -15,7 +15,7 @@ import java.sql.SQLException;
 
 @WebServlet("/signUp")
 public class SignUpServlet extends HttpServlet {
-    private static final String USER = "user";
+    private static final String USER = "curUser";
     private static final String ILLEGAL = "illegal";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

@@ -3,6 +3,9 @@ package Accounts;
 import java.sql.*;
 import java.util.List;
 
+import static java.sql.DriverManager.getConnection;
+
+
 public class SqlAccountDao implements AccountDao {
 
     Connection connection;
@@ -99,5 +102,15 @@ public class SqlAccountDao implements AccountDao {
         return null;
     }
 
-   // public void editAccount(Account acc){}
+    public void editAccount(Account acc){
+        String st = "update accounts Set username = ?, email_address = ? where account_id = ?";
+        try(PreparedStatement statement = connection.prepareStatement(st)){
+            statement.setString(1, acc.getUsername());
+            statement.setString(2, acc.getPassword());
+            statement.setInt(3, acc.getId());
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

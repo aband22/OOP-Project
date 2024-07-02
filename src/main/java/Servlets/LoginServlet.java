@@ -15,7 +15,7 @@ import java.util.Objects;
 
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
-    private static final String USER = "user";
+    private static final String USER = "curUser";
     private static final String ILLEGAL = "illegal";
     private static final String LOGGED_IN_STATUS = "logged_in_status";
     @Override

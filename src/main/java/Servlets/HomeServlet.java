@@ -16,7 +16,7 @@ import java.util.List;
 
 @WebServlet("/home")
 public class HomeServlet extends HttpServlet {
-    private static final String USER = "user";
+    private static final String USER = "curUser";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Cookie[] cookies = request.getCookies();
@@ -29,7 +29,7 @@ public class HomeServlet extends HttpServlet {
             }
         }
         if (user != null) {
-            request.setAttribute(USER, user);
+            request.getServletContext().setAttribute(USER, user);
         }
         String category = request.getParameter("category");
         String searchedItem = request.getParameter("search");
