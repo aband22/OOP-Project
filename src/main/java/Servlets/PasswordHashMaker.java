@@ -8,8 +8,14 @@ public class PasswordHashMaker {
     private String password;
     private static MessageDigest digest;
 
+    static {
+        try {
+            digest = MessageDigest.getInstance("SHA-1");
+        } catch (NoSuchAlgorithmException e) {
+            throw new RuntimeException("Unable to initialize SHA-1 MessageDigest instance", e);
+        }
+    }
     public PasswordHashMaker(String password) throws NoSuchAlgorithmException {
-        digest = MessageDigest.getInstance("SHA-1");
         this.password = password;
     }
 
