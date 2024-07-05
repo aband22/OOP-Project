@@ -15,9 +15,11 @@ CREATE TABLE accounts (
 );
 
 CREATE TABLE friends (
+    friendship_id INT AUTO_INCREMENT,
     account_id INT,
     fr_account_id INT,
-    PRIMARY KEY(account_id, fr_account_id),
+    friendship_date DATE,
+    PRIMARY KEY(friendship_id),
     FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE,
     FOREIGN KEY (fr_account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
 );
@@ -27,7 +29,7 @@ CREATE TABLE quizzes (
     quiz_id INT AUTO_INCREMENT,
     account_id int,
     quiz_title VARCHAR(255),
-    quiz_category TEXT,
+    quiz_category CHAR(64),
     quiz_creation_date DATE,
     num_completed INT,
     PRIMARY KEY(quiz_id),

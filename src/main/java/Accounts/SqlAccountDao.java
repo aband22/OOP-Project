@@ -28,11 +28,6 @@ public class SqlAccountDao implements AccountDao {
     }
 
     @Override
-    public List<Account> getAll() {
-        return null;
-    }
-
-    @Override
     public String getAccPass(String email) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(
@@ -100,6 +95,19 @@ public class SqlAccountDao implements AccountDao {
 
         }
         return null;
+    }
+
+    @Override
+    public String getNameById(int accountId) throws SQLException {
+        String query = "SELECT username from accounts WHERE account_id = ?";
+        try(PreparedStatement st = connection.prepareStatement(query)) {
+            st.setInt(1, accountId);
+            ResultSet rs = st.executeQuery();
+            rs.next();
+            return rs.getString("username");
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void editAccount(Account acc){
