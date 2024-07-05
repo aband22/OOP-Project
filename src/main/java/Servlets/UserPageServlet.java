@@ -1,8 +1,6 @@
 package Servlets;
 
-import Accounts.Account;
-import Accounts.SqlAccountDao;
-import Accounts.SqlAccountInfoDao;
+import Accounts.*;
 import Quizzes.Quiz;
 
 import javax.servlet.ServletException;
@@ -19,6 +17,7 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet("/user")
 @MultipartConfig
@@ -29,8 +28,10 @@ public class UserPageServlet extends HttpServlet {
             throws ServletException, IOException {
         int userId = Integer.parseInt(request.getParameter("user"));
         int curUserId = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
+
+        SqlAccountInfoDao accInfo = (SqlAccountInfoDao) getServletContext().getAttribute("accountInfo_db");
         SqlAccountDao accountStore = (SqlAccountDao) getServletContext().getAttribute("accounts_db");
-        SqlAccountInfoDao quizInfo = (SqlAccountInfoDao) getServletContext().getAttribute("accountInfo_db");
+        SqlNotificationDao notificationsInfo = (SqlNotificationDao) getServletContext().getAttribute("notifications_db");
 
         List<Quiz> myQuizzes;
         List<Account> friends;
@@ -41,25 +42,51 @@ public class UserPageServlet extends HttpServlet {
             throw new RuntimeException(e);
         }
 
-        myQuizzes = quizInfo.getCreatedQuizzes(userId);
-        friends = quizInfo.getAllFriends(userId);
-
+        myQuizzes = accInfo.getCreatedQuizzes(userId);
+        friends = accInfo.getAllFriends(userId);
         request.setAttribute("account", account);
         request.setAttribute("quizzes", myQuizzes);
         request.setAttribute("friends", friends);
         request.setAttribute("curUserId", curUserId);
         request.setAttribute("userId", userId);
 
+        int isFriend = 0;
+        if(accInfo.isFriend(curUserId, userId)) isFriend = 1;
+        if(notificationsInfo.isSentFriendNotification(curUserId, userId)) isFriend = 2;
+
+
+        request.setAttribute("isFriend", "" + isFriend);
+
         request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        int userId = Integer.parseInt(request.getParameter("user"));
+        int curUserId = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
+
+        SqlNotificationDao notificationsInfo = (SqlNotificationDao) getServletContext().getAttribute("notifications_db");
+        if(Objects.equals(request.getParameter("addFriend"), "addFriend")){
+            Notification notification = new Notification(userId, curUserId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
+            notificationsInfo.add(notification);
+
+            //request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
+            response.sendRedirect("user?user=" + userId);
+            return;
+        } else if(Objects.equals(request.getParameter("pending"), "pending") || Objects.equals(request.getParameter("friend"), "friend")){
+            Notification notification = new Notification(userId, curUserId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
+            notificationsInfo.remove(notification);
+
+            //request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
+            response.sendRedirect("user?user=" + userId);
+            return;
+        }
         int accountId = Integer.parseInt(request.getParameter("accountId"));
         String newUsername = request.getParameter("username");
         String newEmail = request.getParameter("mail");
         String newPass = request.getParameter("newPassword");
         String errorMessage = null;
+
 
         SqlAccountDao accountStore = (SqlAccountDao) getServletContext().getAttribute("accounts_db");
 

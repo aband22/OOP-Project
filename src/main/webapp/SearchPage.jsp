@@ -22,24 +22,34 @@
     <div class = "home">
         <nav class="navbar bg-body-tertiary">
             <div class="container-fluid">
-              <a class="navbar-brand" href="HomePage.jsp">
+              <a class="navbar-brand" href="home">
                 <img src="photos/moai.jpg" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
                 SigmaQuiz
               </a>
-              <ul class="nav justify-content-end">
-                <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="notifications"><img src="photos/bell-fill.svg" alt="Logo" width="20" height="20"></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="chat"><img src="photos/chat-right-quote-fill.svg" alt="Logo" width="20" height="20"></a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" href="user"><img src="photos/person-circle.svg" alt="Logo" width="20" height="20"></a>
-                </li>
-                <li class="nav-item">
-                    <a class="btn btn-warning" href="login">გამოსვლა</a>
-                </li>
-              </ul>
+              <c:choose>
+                  <c:when test="${logged_in_status != null}">
+                      <ul class="nav justify-content-end">
+                        <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" href="notifications"><img src="photos/bell-fill.svg" alt="Logo" width="20" height="20"></a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="chat"><img src="photos/chat-right-quote-fill.svg" alt="Logo" width="20" height="20"></a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="user?user=${curUser}"><img src="photos/person-circle.svg" alt="Logo" width="20" height="20"></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="btn btn-warning" href="login">გამოსვლა</a>
+                        </li>
+                      </ul>
+                  </c:when>
+                  <c:otherwise>
+                      <ul class="nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="btn btn-warning" href="login">შესვლა</a>
+                        </li>
+                  </c:otherwise>
+              </c:choose>
             </div>
           </nav>
     </div>

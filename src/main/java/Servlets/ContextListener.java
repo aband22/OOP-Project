@@ -1,9 +1,6 @@
 package Servlets;
 
-import Accounts.AccountDao;
-import Accounts.AccountInfoDao;
-import Accounts.SqlAccountDao;
-import Accounts.SqlAccountInfoDao;
+import Accounts.*;
 import Quizzes.QuizDao;
 import Quizzes.SqlQuizDao;
 
@@ -45,10 +42,18 @@ public class ContextListener implements ServletContextListener {
             throw new RuntimeException(e);
         }
 
+        NotificationDao NotificationStore;
+        try {
+            NotificationStore = new SqlNotificationDao(ConnectionManager.getInstance());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
         System.out.println("Context Created!!!!!");
         context.setAttribute("accounts_db", AccountStore);
         context.setAttribute("accountInfo_db", AccountInfoStore);
         context.setAttribute("quizzes_db", QuizzesStore);
+        context.setAttribute("notifications_db", NotificationStore);
     }
 
     @Override

@@ -13,129 +13,7 @@
     <title>User Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            margin: 0;
-        }
-        .navbar-costom {
-            background-color: #ffffff;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        .user-page {
-            height: 600px;
-            display: flex;
-            background-color: #e7e7e7;
-            padding: 20px;
-            border-radius: 8px;
-        }
-        .left-column {
-            margin-left: 200px;
-            width: 150px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        .profile-photo {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            background-color: #d0d0c5;
-            background-size: cover;
-            margin-bottom: 20px;
-        }
-        .menu {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-        }
-        .menu-item {
-            cursor: pointer;
-            margin: 6px 0;
-            padding: 7px;
-            background-color: #d0d5e1;
-            border-radius: 4px;
-            text-align: center;
-        }
-        .menu-item:hover {
-            background-color: rgb(189, 200, 225);
-        }
-        .right-column {
-            margin-left: 20px;
-            margin-right: 200px;
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-start;
-            width: 100%;
-        }
-        .username {
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            margin-top: 0;
-        }
-        .edit-profile {
-            padding: 10px;
-            background-color: #ffc107;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 150px;
-            text-align: center;
-        }
-        .edit-profile:hover {
-            background-color: #f6ce57;
-        }
-        .content {
-            margin-top: 15px;
-            display: none;
-            padding: 20px;
-            border: 1px solid #bdb9ab;
-            border-radius: 8px;
-            background-color: #fff;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-        .content.active {
-            display: block;
-        }
-        .form-edit {
-            margin-bottom: 15px;
-        }
-        .form-edit label {
-            font-weight: bold;
-            margin-right: 10px;
-        }
-        .form-edit input[type="text"], .form-edit input[type="password"] {
-            width: 300px;
-            padding: 8px;
-            border: 1px solid #b6ac7b;
-            border-radius: 4px;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-        .form-edit input:hover {
-            border-color: #cb7d0c;
-        }
-        .form-edit input:focus {
-            border-color: #d39623;
-            border-width: 2px;
-            outline: none;
-        }
-        .newQuiz {
-            padding: 10px;
-            background-color: #ffc107;
-            color: #000;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            width: 150px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="userPageStyle.css">
 </head>
 <body>
 <div class="home">
@@ -189,8 +67,29 @@
         <c:choose>
             <c:when test="${userId == curUserId}">
                 <div class="edit-profile" onclick="showContent('edit')">რედაქტირება</div>
-                <div class="newQuiz" onclick="showContent('addQuiz')">ქვიზის შექმნა</div>
+                <div class="edit-profile" onclick="showContent('addQuiz')">ქვიზის შექმნა</div>
             </c:when>
+            <c:when test="${userId == 0}">
+
+            </c:when>
+            <c:otherwise>
+                <form action="user?user=${userId}" method="post" id="friendStatus">
+                    <c:choose>
+                        <c:when test="${isFriend == 0}">
+                            <input type="hidden" id="addFriend" name="addFriend">
+                            <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('addFriend')">მეგობრის დამატება</button>
+                        </c:when>
+                        <c:when test="${isFriend == 2}">
+                            <input type="hidden" id="pending" name="pending">
+                            <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('pending')">მეგობრობის მოთხოვნა გაგზავნილია</button>
+                        </c:when>
+                        <c:otherwise>
+                            <input type="hidden" id="friend" name="friend">
+                            <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('friend')">მეგობრები</button>
+                        </c:otherwise>
+                    </c:choose>
+                </form>
+            </c:otherwise>
         </c:choose>
         <div id="info" class="content active">
             <h2>ინფორმაცია</h2>
@@ -256,6 +155,11 @@
     function save() {
         document.getElementById('displayUsername').innerText = document.getElementById('usernameEdit').value;
         showContent('info');
+    }
+    function setAttributeAndSubmit(attribute) {
+        var attributeValue = attribute;
+        document.getElementById(attribute).value = attributeValue;
+        document.getElementById("friendStatus").submit();
     }
 </script>
 </body>

@@ -19,18 +19,19 @@ public class HomeServlet extends HttpServlet {
     private static final String USER = "curUser";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-        String user = null;
-        if (cookies != null) {
-            for (Cookie c : cookies) {
-                if (c.getName().equals(USER)) {
-                    user = c.getValue();
-                }
-            }
-        }
-        if (user != null) {
-            request.getServletContext().setAttribute(USER, user);
-        }
+//        Cookie[] cookies = request.getCookies();
+//        String user = null;
+//        if (cookies != null) {
+//            for (Cookie c : cookies) {
+//                if (c.getName().equals(USER)) {
+//                    user = c.getValue();
+//                }
+//            }
+//        }
+//        if (user != null) {
+//            request.getServletContext().setAttribute(USER, user);
+//        }
+
         String category = request.getParameter("category");
         String searchedItem = request.getParameter("search");
         if(category == null && searchedItem == null){

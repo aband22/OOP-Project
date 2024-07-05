@@ -21,6 +21,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getServletContext().removeAttribute(LOGGED_IN_STATUS);
+        request.getServletContext().setAttribute(USER, "" + 0);
         request.getRequestDispatcher("/LoginPage.jsp").forward(request, response);
 //        ServletContext context = request.getServletContext();
 //        AccountDao store;
@@ -80,7 +81,8 @@ public class LoginServlet extends HttpServlet {
         }
 
         try {
-            response.addCookie(new Cookie(USER, "" + db.getUserID(email)));
+            //response.addCookie(new Cookie(USER, "" + db.getUserID(email)));
+            request.getServletContext().setAttribute(USER, "" + db.getUserID(email));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
