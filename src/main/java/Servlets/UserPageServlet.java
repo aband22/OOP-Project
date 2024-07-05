@@ -68,7 +68,11 @@ public class UserPageServlet extends HttpServlet {
         SqlNotificationDao notificationsInfo = (SqlNotificationDao) getServletContext().getAttribute("notifications_db");
         if(Objects.equals(request.getParameter("addFriend"), "addFriend")){
             Notification notification = new Notification(userId, curUserId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
-            notificationsInfo.add(notification);
+            try {
+                notificationsInfo.add(notification);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             //request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
             response.sendRedirect("user?user=" + userId);

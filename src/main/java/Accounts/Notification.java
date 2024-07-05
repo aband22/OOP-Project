@@ -1,27 +1,30 @@
 package Accounts;
 
+import java.sql.Timestamp;
+
 public class Notification{
     public static final int WEBSITE = -1;
 
-    public static final String FRIEND_REQUEST = "friend_request";
-    public static final String CHALLENGE = "challenge";
-    public static final String NEWS = "news";
-    public static final String FRIEND_RESULT = "friend_result";
-    public static final String FRIEND_ACHIEVEMENT = "friend_achievement";
-    public static final String ACHIEVEMENT = "achievement";
+    public static final String FRIEND_REQUEST = "მეგობრობის მოთხოვნა";
+    public static final String CHALLENGE = "გამოწვევა";
+    public static final String NEWS = "ახალი ქვიზი";
+    public static final String FRIEND_RESULT = "მეგობრის ახალი შედეგი";
+    public static final String FRIEND_ACHIEVEMENT = "მეგობრის ახალი მიღწევა";
+    public static final String ACHIEVEMENT = "მიღწევა";
 
 
-    public static final String FRIEND_REQUEST_TEXT = "friend_request";
-    public static final String CHALLENGE_TEXT = "challenge";
-    public static final String NEWS_TEXT = "news";
-    public static final String FRIEND_RESULT_TEXT = "friend_result";
-    public static final String FRIEND_ACHIEVEMENT_TEXT = "friend_achievement";
-    public static final String ACHIEVEMENT_TEXT = "achievement";
+    public static final String FRIEND_REQUEST_TEXT = "-მა(მ) გამოგიგზავნათ მეგობრობის მოთხოვნა";
+    public static final String CHALLENGE_TEXT = "-მა(მ) გამოგიწვიათ ქვიზში";
+    public static final String NEWS_TEXT = "-მა(მ) ახალი ქვიზი შექმნა";
+    public static final String FRIEND_RESULT_TEXT = "-მა(მ) დაასრულა ქვიზი, იხილეთ მისი შედეგები";
+    public static final String FRIEND_ACHIEVEMENT_TEXT = "-მა(მ) მიიღო ახალი სტატუსი: ";
+    public static final String ACHIEVEMENT_TEXT = "თქვენ მიიღეთ ახალი სტატუსი: ";
 
 
     private int id;
     private int acc_id;
     private int acc_from_id;
+    private Timestamp creationDate;
     private String type;
     private String text;
     public Notification(int acc_id, int acc_from_id, String type, String text){
@@ -29,6 +32,7 @@ public class Notification{
         this.acc_from_id = acc_from_id;
         this.type = type;
         this.text = text;
+        this.creationDate = null;
         this.id = -1;
     }
 
@@ -50,6 +54,14 @@ public class Notification{
 
     public String getText() {
         return text;
+    }
+
+    public Timestamp getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Timestamp creationDate) {
+        this.creationDate = creationDate;
     }
 
     public void setId(int id) {

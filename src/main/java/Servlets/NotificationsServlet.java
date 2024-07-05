@@ -22,7 +22,12 @@ public class NotificationsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int userID = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
         SqlNotificationDao notifications = (SqlNotificationDao) request.getServletContext().getAttribute("notifications_db");
-        List<Notification> userNotifications = notifications.getAll(userID);
+        List<Notification> userNotifications = null;
+        try {
+            userNotifications = notifications.getAll(userID);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         request.setAttribute("notifications", userNotifications);
 
         request.getRequestDispatcher("/NotificationsPage.jsp").forward(request, response);

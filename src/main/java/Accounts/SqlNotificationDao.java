@@ -1,6 +1,7 @@
 package Accounts;
 
-import java.sql.Connection;
+import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SqlNotificationDao implements NotificationDao{
@@ -9,8 +10,19 @@ public class SqlNotificationDao implements NotificationDao{
         this.connection = connection;
     }
     @Override
-    public void add(Notification notification) {
+    public void add(Notification notification) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO notifications (account_id, from_account_id, notification_type, notification_text, notification_date) " + "VALUES (?, ?, ?, ?, SYSDATE);",
+                Statement.RETURN_GENERATED_KEYS);
+        statement.setInt(1, notification.getAccId());
+        statement.setInt(2, notification.getFromId());
+        statement.setString(3, notification.getType());
+        statement.setString(4, notification.getText());
+        statement.executeUpdate();
 
+        ResultSet rs = statement.getGeneratedKeys();
+        rs.next();
+        notification.setId(rs.getInt(1));
     }
 
     @Override
@@ -24,8 +36,21 @@ public class SqlNotificationDao implements NotificationDao{
     }
 
     @Override
-    public List<Notification> getAll(int accountId) {
-        return null;
+    public List<Notification> getAll(int accountId) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(
+                "SELECT * FROM notifications Where account_id = " + '"' + accountId + '"'
+        );
+        List<Notification> result = new ArrayList<>();
+        while(rs.next()){
+            Notification notification = new Notification(
+                    rs.getInt(2),
+                    rs.getInt(3),
+                    rs.getString(4),
+                    rs.getString(5)
+            );
+        }
+        return result;
     }
 
     @Override

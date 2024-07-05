@@ -1,6 +1,7 @@
 <%@ page import="java.util.List,
                             Quizzes.Quiz,
-                            Quizzes.SqlQuizDao" %>
+                            Quizzes.SqlQuizDao,
+                            java.sql.Timestamp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 <%@ page isELIgnored="false" %>
@@ -172,7 +173,7 @@
                         String name = quiz.getTitle();
                         String category = quiz.getCategory();
                         int owner = quiz.getAccount().getId();
-                        long uploadTime = quiz.getCreationDate();
+                        Timestamp uploadTime = quiz.getCreationDate();
                 %>
                 <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
                     <a class="col" href="quiz?quizID=<%=quizId%>">
@@ -216,7 +217,7 @@
                         String name = quiz.getTitle();
                         String category = quiz.getCategory();
                         int owner = quiz.getAccount().getId();
-                        long uploadTime = quiz.getCreationDate();
+                        Timestamp uploadTime = quiz.getCreationDate();
                 %>
                 <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
                     <a class="col" href="quiz?quizID=<%=quizId%>">

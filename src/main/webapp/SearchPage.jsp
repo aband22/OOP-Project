@@ -1,8 +1,11 @@
 <%@ page import="java.util.List,
                             Accounts.Account,
                             Quizzes.Quiz,
-                            Quizzes.SqlQuizDao" %>
+                            Quizzes.SqlQuizDao,
+                            java.sql.Timestamp" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ page isELIgnored="false" %>
 <html lang="en">
 <head>
     <title>SigmaQuiz</title>
@@ -70,7 +73,7 @@
                     String name = quiz.getTitle();
                     String category = quiz.getCategory();
                     String owner = quiz.getAccount().getUsername();
-                    long uploadTime = quiz.getCreationDate();
+                    Timestamp uploadTime = quiz.getCreationDate();
               %>
               <div class="col-md-6">
                 <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quizID=<%=quizId%>">
