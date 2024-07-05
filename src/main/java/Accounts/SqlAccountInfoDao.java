@@ -13,7 +13,12 @@ public class SqlAccountInfoDao implements AccountInfoDao {
     }
 
     @Override
-    public void addFriend(int accountId, int  friendId) {
+    public void addFriend(int accountId) {
+
+    }
+
+    @Override
+    public void addQuiz(Quiz quiz) {
 
     }
 
@@ -25,10 +30,5 @@ public class SqlAccountInfoDao implements AccountInfoDao {
     @Override
     public List<Account> getAllFriends(int accountId) {
         return null;
-    }
-
-    @Override
-    public boolean isFriend(int accountId, int fr_accountId) {
-        return false;
     }
 }

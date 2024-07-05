@@ -102,11 +102,6 @@ public class SqlAccountDao implements AccountDao {
         return null;
     }
 
-    @Override
-    public String getNameById(int accountId) throws SQLException {
-        return null;
-    }
-
     public void editAccount(Account acc){
         String st = "update accounts Set username = ?, email_address = ? where account_id = ?";
         try(PreparedStatement statement = connection.prepareStatement(st)){

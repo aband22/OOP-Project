@@ -1,22 +1,20 @@
 package Quizzes;
 
 import Accounts.Account;
-
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Quiz {
     private static final int NO_ID = -1;
-
-
     private int id;
     private String title;
     private String category;
-    private long creationDate;
+    private Timestamp creationDate;
     private List<Question> questions;
     private Account acc;
 
-    public Quiz(String title, String category, long creationDate, List<Question> questions, Account acc) {
+    public Quiz(String title, String category, Timestamp creationDate, List<Question> questions, Account acc) {
         this.title = title;
         this.category = category;
         this.creationDate = creationDate;
@@ -37,11 +35,11 @@ public class Quiz {
         return id;
     }
 
-    public long getCreationDate() {
+    public Timestamp getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(long creationDate) {
+    public void setCreationDate(Timestamp creationDate) {
         this.creationDate = creationDate;
     }
 
