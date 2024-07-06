@@ -82,6 +82,20 @@ public class SqlAccountDao implements AccountDao {
     }
 
     @Override
+    public String getNameById(int accountId) throws SQLException {
+        String query = "SELECT username FROM accounts WHERE account_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, accountId);
+            try (ResultSet rs = statement.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("username");
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public Account GetAccountById(int accountId) throws SQLException {
         String acc = "select * from accounts where account_id = ?";
         PreparedStatement statement = connection.prepareStatement(acc);
@@ -94,7 +108,6 @@ public class SqlAccountDao implements AccountDao {
             account.setUsername(rs.getString("username"));
             account.setPassword(rs.getString("password_hash"));
             return account;
-
         }
         return null;
     }

@@ -6,8 +6,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static javax.ws.rs.HttpMethod.DELETE;
+
 public class SqlAccountInfoDao implements AccountInfoDao {
     private Connection connection;
+
     public SqlAccountInfoDao(Connection connection) {
         this.connection = connection;
     }
@@ -103,6 +106,25 @@ public class SqlAccountInfoDao implements AccountInfoDao {
             ResultSet rs = st.executeQuery();
 
             return rs.next();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void removeFriend(int accountId, int friendId) {
+        String query = "DELETE FROM friends WHERE account_id = ? AND fr_account_id = ?";
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            st.setInt(1, accountId);
+            st.setInt(2, friendId);
+            st.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            st.setInt(2, accountId);
+            st.setInt(1, friendId);
+            st.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

@@ -9,4 +9,5 @@ public interface AccountInfoDao {
     List<Quiz> getCreatedQuizzes(int accountId);
     List<Integer> getAllFriendsId(int accountId);
     boolean isFriend(int accountId, int fr_accountId);
+    void removeFriend(int accountId, int friendId);
 }
