@@ -22,13 +22,13 @@ public class NotificationsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         int userID = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
         SqlNotificationDao notifications = (SqlNotificationDao) request.getServletContext().getAttribute("notifications_db");
-        List<Notification> userNotifications = null;
+        List<Notification> userNotifications;
         try {
             userNotifications = notifications.getAll(userID);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        request.setAttribute("notifications", userNotifications);
+        request.getServletContext().setAttribute("notifications", userNotifications);
 
         request.getRequestDispatcher("/NotificationsPage.jsp").forward(request, response);
     }
@@ -40,8 +40,20 @@ public class NotificationsServlet extends HttpServlet {
         int curUserId = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
         int userId = Integer.parseInt(request.getParameter("user"));
         if(Objects.equals(request.getParameter("admit"), "admit")) {
-            Notification notification = new Notification(userId, curUserId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
-            notificationsInfo.remove(notification);
+            Notification notification = new Notification(curUserId, userId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
+            try {
+                notificationsInfo.remove(notification);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                if(notificationsInfo.isSentFriendNotification(curUserId, userId)){
+                    notification = new Notification(userId, curUserId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
+                    notificationsInfo.remove(notification);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             accountInfo.addFriend(curUserId, userId);
             String chatName;
@@ -62,12 +74,20 @@ public class NotificationsServlet extends HttpServlet {
                 throw new RuntimeException(e);
             }
         } else if(Objects.equals(request.getParameter("reject"), "reject")){
-            Notification notification = new Notification(userId, curUserId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
-            notificationsInfo.remove(notification);
+            Notification notification = new Notification(curUserId, userId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
+            try {
+                notificationsInfo.remove(notification);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
         } else if(Objects.equals(request.getParameter("forwardToQuiz"), "forwardToQuiz")){
             int quizId = Integer.parseInt(request.getParameter("quiz"));
             int notificationId = Integer.parseInt(request.getParameter("notification"));
-            notificationsInfo.remove(notificationId);
+            try {
+                notificationsInfo.remove(notificationId);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             response.sendRedirect("quiz?quiz=" + quizId);
             return;
         }

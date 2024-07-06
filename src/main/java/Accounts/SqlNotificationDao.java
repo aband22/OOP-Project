@@ -12,7 +12,7 @@ public class SqlNotificationDao implements NotificationDao{
     @Override
     public void add(Notification notification) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO notifications (account_id, from_account_id, notification_type, notification_text, notification_date) " + "VALUES (?, ?, ?, ?, SYSDATE);",
+                "INSERT INTO notifications (account_id, from_account_id, notification_type, notification_text, notification_date) " + "VALUES (?, ?, ?, ?, SYSDATE());",
                 Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, notification.getAccId());
         statement.setInt(2, notification.getFromId());
@@ -26,13 +26,21 @@ public class SqlNotificationDao implements NotificationDao{
     }
 
     @Override
-    public void remove(Notification notification) {
-
+    public void remove(Notification notification) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(
+                "DELETE FROM notifications Where account_id = " + '"' + notification.getAccId() + '"' +
+                        " AND from_account_id = " + '"' + notification.getFromId() + '"' +
+                        " AND notification_type = " + '"' + Notification.FRIEND_REQUEST + '"'
+        );
     }
 
     @Override
-    public void remove(int notificationId) {
-
+    public void remove(int notificationId) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.execute(
+                "DELETE FROM notifications Where notification_id = " + '"' + notificationId + '"'
+        );
     }
 
     @Override
@@ -49,12 +57,21 @@ public class SqlNotificationDao implements NotificationDao{
                     rs.getString(4),
                     rs.getString(5)
             );
+            notification.setCreationDate(rs.getTimestamp(6));
+            notification.setId(rs.getInt(1));
+            result.add(notification);
         }
         return result;
     }
 
     @Override
-    public boolean isSentFriendNotification(int accountId, int to_accountId) {
-        return false;
+    public boolean isSentFriendNotification(int accountId, int to_accountId) throws SQLException {
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(
+                "SELECT * FROM notifications Where account_id = " + '"' + to_accountId + '"' +
+                        " AND from_account_id = " + '"' + accountId + '"' +
+                        " AND notification_type = " + '"' + Notification.FRIEND_REQUEST + '"'
+        );
+        return rs.next();
     }
 }

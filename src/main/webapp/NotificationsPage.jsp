@@ -1,7 +1,10 @@
 <%@ page import="java.util.List,
                             Accounts.SqlAccountDao,
-                            Accounts.Notification" %>
+                            Accounts.Notification,
+                            java.util.Objects" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
+<%@ page isELIgnored="false" %>
 <html lang="en">
 <head>
     <title>SigmaQuiz</title>
@@ -72,7 +75,7 @@
                     String text = notification.getText();
                     int from_id = notification.getFromId();
                     String name;
-                    if(from_id != -1) name = (SqlAccountDao)application.getAttribute("accounts_db").getNameById(from_id);
+                    if(from_id != -1) name = ((SqlAccountDao)application.getAttribute("accounts_db")).GetAccountById(from_id).getUsername();
                     else name = "";
           %>
           <div class="card mb-9 btn" style="max-width: 540px; border: white;">
@@ -83,9 +86,9 @@
               <div class="col-md-8">
                 <div class="card-body">
                   <h6 class="card-title"><%=title%></h6>
-                  <p class="card-text"><%=name><%=text></p>
+                  <p class="card-text"><%=name%><%=text%></p>
                   <p class="card-text"><small class="text-body-secondary">გამოგზავნილია 3 წუთის წინ</small></p>
-                      <form action="notifications/user?user=<%=from_id%>&notification=<%=notification_id%>&quiz=<%=quiz_id%>" method="post" id="buttonStatus">
+                      <form action="notifications?user=<%=from_id%>&notification=<%=notification_id%>&quiz=<%=notification_id%>" method="post" id="buttonStatus">
                       <% if(Objects.equals(title, Notification.FRIEND_REQUEST)){%>
                       <input type="hidden" id="admit" name="admit">
                       <button type="submit" class="btn btn-primary" onclick="setAttributeAndSubmit('admit')">დადასტურება</button>

@@ -67,6 +67,7 @@ public class SqlAccountInfoDao implements AccountInfoDao {
                     curr.setTitle(rs.getString("quiz_title"));
                     curr.setCategory(rs.getString("quiz_category"));
                     curr.setCreationDate(rs.getTimestamp("quiz_creation_date"));
+                    quizzes.add(curr);
                 }
             }
         } catch (SQLException e) {
@@ -76,18 +77,15 @@ public class SqlAccountInfoDao implements AccountInfoDao {
     }
 
     @Override
-    public List<Account> getAllFriends(int accountId) {
-        List<Account> friends = new ArrayList<>();
-        String query = "SELECT * FROM friends WHERE account_id = ?";
+    public List<Integer> getAllFriendsId(int accountId) {
+        List<Integer> friends = new ArrayList<>();
+        String query = "SELECT * FROM friends WHERE account_id = ? ORDER BY friendship_date DESC";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, String.valueOf(accountId));
             try (ResultSet rs = statement.executeQuery()) {
                 while (rs.next()) {
-                    Account curr = new Account();
-                    curr.setId(rs.getInt("account_id"));
-                    curr.setEmail(rs.getString("email_address"));
-                    curr.setPassword(String.valueOf(rs.getLong("quiz_creation_date")));
-                    curr.setUsername(String.valueOf(rs.getInt("username")));
+                    int friendId = rs.getInt("fr_account_id");
+                    friends.add(friendId);
                 }
             }
         } catch (SQLException e) {
@@ -95,9 +93,10 @@ public class SqlAccountInfoDao implements AccountInfoDao {
         }
         return friends;
     }
+
     @Override
     public boolean isFriend(int accountId, int fr_accountId) {
-        String query = "SELECT count(*) FROM friends WHERE account_id = ? AND fr_account_id = ?";
+        String query = "SELECT * FROM friends WHERE account_id = ? AND fr_account_id = ?";
         try (PreparedStatement st = connection.prepareStatement(query)) {
             st.setInt(1, accountId);
             st.setInt(2, fr_accountId);

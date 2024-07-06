@@ -3,6 +3,7 @@ USE YOUR_DATABASE;
 
 DROP TABLE IF EXISTS quizzes;
 DROP TABLE IF EXISTS friends;
+DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS accounts;
  -- remove table if it already exists and start from scratch
 
@@ -18,7 +19,7 @@ CREATE TABLE friends (
     friendship_id INT AUTO_INCREMENT,
     account_id INT,
     fr_account_id INT,
-    friendship_date DATE,
+    friendship_date Timestamp,
     PRIMARY KEY(friendship_id),
     FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE,
     FOREIGN KEY (fr_account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
@@ -30,7 +31,7 @@ CREATE TABLE notifications (
     from_account_id INT,
     notification_type CHAR(64),
     notification_text CHAR(64),
-    notification_date DATE,
+    notification_date Timestamp,
     PRIMARY KEY (notification_id),
     FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE,
     FOREIGN KEY (from_account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
@@ -42,7 +43,7 @@ CREATE TABLE quizzes (
     account_id int,
     quiz_title VARCHAR(255),
     quiz_category CHAR(64),
-    quiz_creation_date DATE,
+    quiz_creation_date Timestamp,
     num_completed INT,
     PRIMARY KEY(quiz_id),
     FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE

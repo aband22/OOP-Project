@@ -15,14 +15,14 @@ public class Quiz {
     private Account acc;
     private String description;
 
-    public Quiz(String title, String category, String discription, List<Question> questions, Account acc) {
+    public Quiz(String title, String category, String description, List<Question> questions, Account acc) {
         this.title = title;
         this.category = category;
         this.creationDate = null;
         this.questions = questions != null ? questions : new ArrayList<Question>();
         this.acc = acc;
         this.id = NO_ID;
-        this.description = discription;
+        this.description = description;
 
     }
 

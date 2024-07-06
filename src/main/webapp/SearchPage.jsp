@@ -74,6 +74,26 @@
                     String category = quiz.getCategory();
                     String owner = quiz.getAccount().getUsername();
                     Timestamp uploadTime = quiz.getCreationDate();
+                    Timestamp currentTimeMillis = new Timestamp(System.currentTimeMillis());
+                    long durationInMillis = currentTimeMillis.getTime() - uploadTime.getTime();
+                    int duration = (int)durationInMillis / (60 * 1000);
+                    String timeText = "წუთის";
+                    if(duration > 59){
+                        duration = duration / 60;
+                        timeText = "საათის";
+                    }
+                    if(duration > 23){
+                        duration = duration / 24;
+                        timeText = "დღის";
+                    }
+                    if(duration > 30){
+                        duration = duration / 30;
+                        timeText = "თვის";
+                    }
+                    if(duration > 11){
+                        duration = duration / 12;
+                        timeText = "წლის";
+                    }
               %>
               <div class="col-md-6">
                 <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quizID=<%=quizId%>">
@@ -91,7 +111,7 @@
                                 <li>Time to</li>
                             </ul>
                         </h6>
-                        <p class="card-text"><small class="text-body-secondary">Last updated 3 mins ago</small></p>
+                        <p class="card-text"><small class="text-body-secondary">გამოქვეყნდა <%=durationInMinutes%> <%=timeText%> წინ</small></p>
                       </div>
                     </div>
                   </div>

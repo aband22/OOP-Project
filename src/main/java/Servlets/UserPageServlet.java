@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,7 +36,7 @@ public class UserPageServlet extends HttpServlet {
         SqlNotificationDao notificationsInfo = (SqlNotificationDao) getServletContext().getAttribute("notifications_db");
 
         List<Quiz> myQuizzes;
-        List<Account> friends;
+        List<Integer> friendsId;
         Account account;
         try {
             account = accountStore.GetAccountById(userId);
@@ -43,7 +45,15 @@ public class UserPageServlet extends HttpServlet {
         }
 
         myQuizzes = accInfo.getCreatedQuizzes(userId);
-        friends = accInfo.getAllFriends(userId);
+        friendsId = accInfo.getAllFriendsId(userId);
+        List<Account> friends = new ArrayList<>();
+        for (int i = 0; i < friendsId.size(); i++) {
+            try {
+                friends.add(accountStore.GetAccountById(friendsId.get(i)));
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
         request.setAttribute("account", account);
         request.setAttribute("quizzes", myQuizzes);
         request.setAttribute("friends", friends);
@@ -52,8 +62,11 @@ public class UserPageServlet extends HttpServlet {
 
         int isFriend = 0;
         if(accInfo.isFriend(curUserId, userId)) isFriend = 1;
-        if(notificationsInfo.isSentFriendNotification(curUserId, userId)) isFriend = 2;
-
+        try {
+            if(notificationsInfo.isSentFriendNotification(curUserId, userId)) isFriend = 2;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
         request.setAttribute("isFriend", "" + isFriend);
 
@@ -79,7 +92,11 @@ public class UserPageServlet extends HttpServlet {
             return;
         } else if(Objects.equals(request.getParameter("pending"), "pending") || Objects.equals(request.getParameter("friend"), "friend")){
             Notification notification = new Notification(userId, curUserId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
-            notificationsInfo.remove(notification);
+            try {
+                notificationsInfo.remove(notification);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
 
             //request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
             response.sendRedirect("user?user=" + userId);

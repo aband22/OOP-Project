@@ -174,6 +174,26 @@
                         String category = quiz.getCategory();
                         int owner = quiz.getAccount().getId();
                         Timestamp uploadTime = quiz.getCreationDate();
+                        Timestamp currentTimeMillis = new Timestamp(System.currentTimeMillis());
+                        long durationInMillis = currentTimeMillis.getTime() - uploadTime.getTime();
+                        int duration = (int)durationInMillis / (60 * 1000);
+                        String timeText = "წთ";
+                        if(duration > 59){
+                            duration = duration / 60;
+                            timeText = "სთ";
+                        }
+                        if(duration > 23){
+                            duration = duration / 24;
+                            timeText = "დღ";
+                        }
+                        if(duration > 30){
+                            duration = duration / 30;
+                            timeText = "თვ";
+                        }
+                        if(duration > 11){
+                            duration = duration / 12;
+                            timeText = "წ";
+                        }
                 %>
                 <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
                     <a class="col" href="quiz?quizID=<%=quizId%>">
@@ -190,7 +210,7 @@
                                     </li>
                                     <li class="d-flex align-items-center">
                                         <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
-                                        <small>3d</small>
+                                        <small><%=duration%><%=timeText%></small>
                                     </li>
                                     </ul>
                             </div>
@@ -218,6 +238,26 @@
                         String category = quiz.getCategory();
                         int owner = quiz.getAccount().getId();
                         Timestamp uploadTime = quiz.getCreationDate();
+                        Timestamp currentTimeMillis = new Timestamp(System.currentTimeMillis());
+                        long durationInMillis = currentTimeMillis.getTime() - uploadTime.getTime();
+                        int duration = (int)durationInMillis / (60 * 1000);
+                        String timeText = "წთ";
+                        if(duration > 59){
+                            duration = duration / 60;
+                            timeText = "სთ";
+                        }
+                        if(duration > 23){
+                            duration = duration / 24;
+                            timeText = "დღ";
+                        }
+                        if(duration > 30){
+                            duration = duration / 30;
+                            timeText = "თვ";
+                        }
+                        if(duration > 11){
+                            duration = duration / 12;
+                            timeText = "წ";
+                        }
                 %>
                 <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
                     <a class="col" href="quiz?quizID=<%=quizId%>">
@@ -234,7 +274,7 @@
                                     </li>
                                     <li class="d-flex align-items-center">
                                         <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
-                                        <small>3d</small>
+                                        <small><%=duration%><%=timeText%></small>
                                     </li>
                                     </ul>
                             </div>
