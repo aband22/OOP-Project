@@ -1,6 +1,6 @@
 USE YOUR_DATABASE;
   -- >>>>>>>>>>>> change this line so it uses your database, not mine <<<<<<<<<<<<<<<
-
+DROP TABLE IF EXISTS achievements;
 DROP TABLE IF EXISTS quizzes;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS notifications;
@@ -47,4 +47,14 @@ CREATE TABLE quizzes (
     num_completed INT,
     PRIMARY KEY(quiz_id),
     FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE achievements (
+      achievement_id INT AUTO_INCREMENT,
+      account_id int,
+      achievement_type CHAR(64),
+      achievement_text VARCHAR(225),
+      PRIMARY KEY(achievement_id),
+      FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
 );
