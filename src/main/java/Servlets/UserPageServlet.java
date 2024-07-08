@@ -88,7 +88,13 @@ public class UserPageServlet extends HttpServlet {
             return;
         }
 
-        List<Integer> quizzesIds = quizzesInfo.getDoneQuizzesId(userId);
+        List<Integer> quizzesIds = null;
+        try {
+            quizzesIds = quizzesInfo.getDoneQuizzesId(userId);
+        } catch (SQLException e) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
         List<Quiz> quizzes = new ArrayList<>();
         for (Integer integer : quizzesIds) {
             try {
