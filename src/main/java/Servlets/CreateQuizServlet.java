@@ -34,7 +34,7 @@ public class CreateQuizServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        response.sendRedirect("login.jsp");
+        request.getRequestDispatcher("/CreateQuiz.jsp").forward(request,response);
     }
 
 
@@ -78,7 +78,7 @@ public class CreateQuizServlet extends HttpServlet {
 
         try {
             SqlAccountDao accountStore = (SqlAccountDao) getServletContext().getAttribute("accounts_db");
-            int accountId = Integer.parseInt((String) getServletContext().getAttribute("curUser"));
+            int accountId = Integer.parseInt((String) request.getSession().getAttribute("curUser"));
             acc = accountStore.GetAccountById(accountId);
         } catch (SQLException e) {
             request.setAttribute("error", "Error retrieving account information");

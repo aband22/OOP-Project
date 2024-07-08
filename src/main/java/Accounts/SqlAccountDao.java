@@ -109,12 +109,11 @@ public class SqlAccountDao implements AccountDao {
     }
 
    public void editAccount(Account acc){
-       String st = "update accounts Set username = ?, email_address = ?, password_hash = ? where account_id = ?";
+       String st = "update accounts Set username = ?, password_hash = ? where account_id = ?";
        try(PreparedStatement statement = connection.prepareStatement(st)){
            statement.setString(1, acc.getUsername());
-           statement.setString(2, acc.getEmail());
-           statement.setString(3, acc.getPassword());
-           statement.setInt(4, acc.getId());
+           statement.setString(2, acc.getPassword());
+           statement.setInt(3, acc.getId());
            System.out.println(acc.getEmail());
            statement.executeUpdate();
 

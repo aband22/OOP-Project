@@ -72,7 +72,7 @@
         <c:choose>
             <c:when test="${userId == curUserId}">
                 <div class="edit-profile" onclick="showContent('edit')">რედაქტირება</div>
-                <div class="edit-profile" onclick="showContent('addQuiz')">ქვიზის შექმნა</div>
+                <a class="edit-profile" href="addQuiz">ქვიზის შექმნა</a>
             </c:when>
             <c:when test="${userId == 0}">
 
@@ -290,9 +290,10 @@
             </form>
         </div>
     </div>
-    <div id="addQuiz" class="content">
-        <h2>ახალი ქვიზი</h2>
-    </div>
+<%--    <a id="addQuiz" class="content" href="addQuiz">--%>
+<%--        <h2>ახალი ქვიზი</h2>--%>
+<%--    </a>--%>
+
 </div>
 <script>
     function showContent(section) {
