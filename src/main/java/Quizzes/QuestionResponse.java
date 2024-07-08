@@ -1,11 +1,16 @@
 package Quizzes;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class QuestionResponse implements Question{
-    String answer;
+    List<String> answers;
     String question;
-    public QuestionResponse(String question, String answer){
+    private String photo;
+
+    public QuestionResponse(String question, List<String> answers){
         this.question = question;
-        this.answer = answer;
+        this.answers = answers;
     }
 
     @Override
@@ -19,12 +24,34 @@ public class QuestionResponse implements Question{
     }
 
 
-    public String getAnswer() {
-        return answer;
+    @Override
+    public List<String> getAnswers() {
+        return answers;
+    }
+
+    @Override
+    public String getPhotoPath() {
+        return photo;
+    }
+
+    @Override
+    public void setAnswerPhotos(ArrayList<String> answerPhotos) {
+
+    }
+
+    @Override
+    public String getQuestionType() {
+        return "Response";
+    }
+
+    @Override
+    public void setPhotoPath(String s) {
+        this.photo = s;
     }
 
 
-    public void setAnswer(String answers) {
-        this.answer = answers;
+    @Override
+    public void setAnswers(List<String> answers) {
+        this.answers = answers;
     }
 }

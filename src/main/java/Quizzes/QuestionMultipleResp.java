@@ -1,11 +1,14 @@
 package Quizzes;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionMultipleResp implements Question{
     String question;
-    Set<String> answers;
-    public QuestionMultipleResp(String question, Set<String> answers){
+    List<String> answers;
+    private String photo;
+
+    public QuestionMultipleResp(String question, List<String> answers){
         this.question = question;
         this.answers = answers;
     }
@@ -20,11 +23,32 @@ public class QuestionMultipleResp implements Question{
         this.question = question;
     }
 
-    public Set<String> getAnswers(){
+    public List<String> getAnswers(){
         return answers;
     }
 
-    public void setAnswers(Set<String> answers){
+    @Override
+    public String getQuestionType() {
+        return "MultipleResponse";
+    }
+
+    @Override
+    public void setPhotoPath(String s) {
+        this.photo = s;
+    }
+    @Override
+
+    public String getPhotoPath() {
+        return photo;
+    }
+
+    @Override
+    public void setAnswerPhotos(ArrayList<String> answerPhotos) {
+
+    }
+
+    @Override
+    public void setAnswers(List<String> answers){
         this.answers = answers;
     }
 

@@ -6,6 +6,8 @@ DROP TABLE IF EXISTS notifications;
 DROP TABLE IF EXISTS quizzesHistory;
 DROP TABLE IF EXISTS quizzes;
 DROP TABLE IF EXISTS accounts;
+DROP TABLE IF EXISTS answers;
+DROP TABLE IF EXISTS questions;
  -- remove table if it already exists and start from scratch
 
 CREATE TABLE accounts (
@@ -39,19 +41,6 @@ CREATE TABLE notifications (
     FOREIGN KEY (from_account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
 );
 
-
-CREATE TABLE quizzes (
-    quiz_id INT AUTO_INCREMENT,
-    account_id int,
-    quiz_title VARCHAR(255),
-    quiz_category CHAR(64),
-    quiz_creation_date Timestamp,
-    num_completed INT,
-    PRIMARY KEY(quiz_id),
-    FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
-);
-
-
 CREATE TABLE achievements (
       achievement_id INT AUTO_INCREMENT,
       account_id int,
@@ -70,4 +59,39 @@ CREATE TABLE quizzesHistory (
     primary key (quizzesHistory_id),
     FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE,
     FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id) ON DELETE CASCADE
+);
+
+
+CREATE TABLE quizzes (
+                         quiz_id INT AUTO_INCREMENT,
+                         account_id INT,
+                         quiz_title VARCHAR(255),
+                         quiz_category VARCHAR(64),
+                         quiz_creation_date DATE,
+                         num_completed INT,
+                         quiz_timer VARCHAR(64),
+                         quiz_points INT,
+                         quiz_photo VARCHAR(255),
+                         PRIMARY KEY(quiz_id),
+                         FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
+);
+
+CREATE TABLE questions (
+                           question_id INT AUTO_INCREMENT,
+                           quiz_id INT,
+                           question_text TEXT,
+                           question_type VARCHAR(64),
+                           question_photo VARCHAR(255),
+                           PRIMARY KEY (question_id),
+                           FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id) ON DELETE CASCADE
+);
+
+CREATE TABLE answers (
+                         answer_id INT AUTO_INCREMENT,
+                         question_id INT,
+                         answer_text TEXT,
+                         is_correct BOOLEAN,
+                         answer_photo VARCHAR(255),
+                         PRIMARY KEY (answer_id),
+                         FOREIGN KEY (question_id) REFERENCES questions(question_id) ON DELETE CASCADE
 );

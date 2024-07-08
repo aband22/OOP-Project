@@ -6,11 +6,13 @@ import java.util.List;
 public class QuestionFill implements Question{
     String question;
     List<String> answers;
+    private String photo;
 
-    public QuestionFill(String question, ArrayList<String> answers){
+    public QuestionFill(String question, List<String> answers){
         this.question = question;
         this.answers = answers;
     }
+
 
     @Override
     public String getQuestion() {
@@ -22,12 +24,32 @@ public class QuestionFill implements Question{
         this.question = question;
     }
 
-    public List<String> getAnswer() {
+    public List<String> getAnswers() {
         return answers;
     }
 
+    @Override
+    public String getQuestionType() {
+        return "Fill";
+    }
 
-    public void setAnswer(List<String> answers) {
+    @Override
+    public void setPhotoPath(String s) {
+        this.photo = "";
+    }
+    @Override
+
+    public String getPhotoPath() {
+        return photo;
+    }
+
+    @Override
+    public void setAnswerPhotos(ArrayList<String> answerPhotos) {
+
+    }
+
+    @Override
+    public void setAnswers(List<String> answers) {
         this.answers = answers;
     }
 }

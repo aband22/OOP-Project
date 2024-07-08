@@ -7,7 +7,10 @@ public class QuestionMultipleChoice implements Question{
     List<String> choices;
     List<String> answers;
     String question;
-    public QuestionMultipleChoice(String question, ArrayList<String> choices, ArrayList<String> answers){
+    private String photo;
+    private List<String> answerPhotos;
+
+    public QuestionMultipleChoice(String question, List<String> choices, List<String> answers){
         this.question = question;
         this.answers = answers;
         this.choices = choices;
@@ -23,13 +26,36 @@ public class QuestionMultipleChoice implements Question{
         this.question = question;
     }
 
-    public List<String> getAnswer(String quizId, int ind) {
+    public List<String> getAnswers() {
         return answers;
     }
 
-    public void setAnswer(List<String> answers) {
-        this.choices = choices;
+    @Override
+    public String getQuestionType() {
+        return "MultipleChoice";
     }
+
+    @Override
+    public void setPhotoPath(String s) {
+        this.photo = s;
+    }
+
+    @Override
+    public String getPhotoPath() {
+        return photo;
+    }
+
+    @Override
+    public void setAnswerPhotos(ArrayList<String> answerPhotos) {
+        this.answerPhotos = answerPhotos;
+    }
+
+    @Override
+
+    public void setAnswers(List<String> answers) {
+        this.answers = answers;
+    }
+
 
     public List<String> getChoices(){
         return choices;
@@ -38,4 +64,9 @@ public class QuestionMultipleChoice implements Question{
     public void setChoices(List<String> choices){
         this.choices = choices;
     }
+    List<String> getAnswerPhotos(){
+        return answerPhotos;
+    }
+
+
 }

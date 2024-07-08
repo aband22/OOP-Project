@@ -6,6 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class SqlQuizDao implements QuizDao {
     private Connection connection;
@@ -16,15 +17,112 @@ public class SqlQuizDao implements QuizDao {
 
     @Override
     public void add(Quiz quiz) throws SQLException {
-        String query = "INSERT INTO quizzes (account_id, quiz_title, quiz_category, quiz_creation_date, num_completed) " +
-                "VALUES (?, ?, ?, SYSDATE(), ?)";
-        PreparedStatement st = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
-        st.setInt(1, quiz.getAccount().getId());
-        st.setString(2, quiz.getTitle());
-        st.setString(3, quiz.getCategory());
-        st.setInt(4, 0);
-        st.executeUpdate();
+        String insertQuizQuery = "INSERT INTO quizzes (account_id, quiz_title, quiz_category, quiz_creation_date, num_completed, quiz_timer, quiz_points, quiz_photo) " +
+                "VALUES (?, ?, ?, SYSDATE(), ?,?,?,?)";
+        String insertQuestionQuery = "INSERT INTO questions (quiz_id, question_text, question_type, question_photo) VALUES (?, ?, ?,?)";
+        String insertAnswerQuery = "INSERT INTO answers (question_id, answer_text, is_correct,answer_photo) VALUES (?, ?, ?,?)";
 
+        try (PreparedStatement insertQuizStmt = connection.prepareStatement(insertQuizQuery, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement insertQuestionStmt = connection.prepareStatement(insertQuestionQuery, Statement.RETURN_GENERATED_KEYS);
+             PreparedStatement insertAnswerStmt = connection.prepareStatement(insertAnswerQuery, Statement.RETURN_GENERATED_KEYS)) {
+
+            insertQuizStmt.setInt(1, quiz.getAccount().getId());
+            insertQuizStmt.setString(2, quiz.getTitle());
+            insertQuizStmt.setString(3, quiz.getCategory());
+            insertQuizStmt.setInt(4, 0);
+            insertQuizStmt.setString(5, quiz.getTimer());
+            insertQuizStmt.setInt(6, quiz.getPoints());
+            insertQuizStmt.setString(7,quiz.getQuizPhoto());
+
+            insertQuizStmt.executeUpdate();
+
+            int quizId;
+            try (ResultSet rs = insertQuizStmt.getGeneratedKeys()) {
+                if (rs.next()) {
+                    quizId = rs.getInt(1);
+                } else {
+                    throw new SQLException("Failed to insert quiz, no ID obtained.");
+                }
+            }
+
+            for (Question question : quiz.getQuestions()) {
+                insertQuestionStmt.setInt(1, quizId);
+                insertQuestionStmt.setString(2, question.getQuestion());
+                insertQuestionStmt.setString(3, question.getQuestionType());
+                insertQuestionStmt.setString(4,question.getPhotoPath());
+                insertQuestionStmt.executeUpdate();
+
+                System.out.println(question.getPhotoPath());
+
+                int questionId;
+                try (ResultSet questionKeys = insertQuestionStmt.getGeneratedKeys()) {
+                    if (questionKeys.next()) {
+                        questionId = questionKeys.getInt(1);
+                    } else {
+                        throw new SQLException("Failed to insert question, no ID obtained.");
+                    }
+                }
+
+                if (question instanceof QuestionResponse) {
+                    String answer =  question.getAnswers().get(0);
+                    insertAnswerStmt.setInt(1, questionId);
+                    insertAnswerStmt.setString(2, answer);
+                    insertAnswerStmt.setBoolean(3, true);
+                    insertAnswerStmt.setString(4,"");
+                    insertAnswerStmt.executeUpdate();
+                } else if (question instanceof QuestionFill) {
+                    List<String> answers = question.getAnswers();
+                    for (String answer : answers) {
+                        insertAnswerStmt.setInt(1, questionId);
+                        insertAnswerStmt.setString(2, answer);
+                        // System.out.println(answer);
+                        insertAnswerStmt.setBoolean(3, true);
+                        insertAnswerStmt.setString(4,"");
+                        insertAnswerStmt.executeUpdate();
+                    }
+                } else if (question instanceof QuestionMultipleChoice) {
+                    //   System.out.println( ((QuestionMultipleChoice) question).getAnswerPhotos().get(1));
+                    List<String> choices = ((QuestionMultipleChoice) question).getChoices();
+                    List<String> answers = question.getAnswers();
+                    int answercount=0;
+                    for (String choice : choices) {
+                        insertAnswerStmt.setInt(1, questionId);
+                        insertAnswerStmt.setString(2, choice);
+                        insertAnswerStmt.setBoolean(3, answers.contains(choice));
+                        insertAnswerStmt.setString(4, ((QuestionMultipleChoice) question).getAnswerPhotos().get(answercount));
+                        insertAnswerStmt.executeUpdate();
+                        answercount++;
+                    }
+                } else if (question instanceof QuestionMultipleResp) {
+                    List<String> answers = question.getAnswers();
+                    for (String answer : answers) {
+                        insertAnswerStmt.setInt(1, questionId);
+                        insertAnswerStmt.setString(2, answer);
+                        insertAnswerStmt.setBoolean(3, true);
+                        insertAnswerStmt.setString(4,"");
+                        insertAnswerStmt.executeUpdate();
+                    }
+                }
+            }
+        }
+//        Quiz quiz25 = getQuizById(7);
+//        if (quiz25 != null) {
+//            System.out.println("Quiz ID: " + quiz25.getId());
+//            System.out.println("Title: " + quiz25.getTitle());
+//            System.out.println("Category: " + quiz25.getCategory());
+//            System.out.println("Creation Date: " + quiz25.getCreationDate());
+//            System.out.println("Timer: " + quiz25.getTimer());
+//            System.out.println("Number Completed: " + quiz25.getNumCompleted());
+//
+//            for (Question question : quiz25.getQuestions()) {
+//                System.out.println("Question: " + question.getQuestion());
+//                for (String answer : question.getAnswers()) {
+//                    System.out.println("Answer: " + answer);
+//                }
+//            }
+//        } else {
+//            System.out.println("Quiz with ID 25 not found.");
+//        }
     }
 
     private Quiz getQuiz(ResultSet rs) throws SQLException {
@@ -32,23 +130,80 @@ public class SqlQuizDao implements QuizDao {
         curr.setTitle(rs.getString("quiz_title"));
         curr.setCategory(rs.getString("quiz_category"));
         curr.setCreationDate(rs.getTimestamp("quiz_creation_date"));
+        curr.setTimer(rs.getString("quiz_timer"));
+        curr.setNumCompleted(rs.getInt("num_completed"));
 
         Account curAccount = new Account();
         int accountId = rs.getInt("account_id");
         int quizId = rs.getInt("quiz_id");
         String query = "SELECT username from accounts WHERE account_id = ?";
-        PreparedStatement st = connection.prepareStatement(query);
-        st.setInt(1, accountId);
-        ResultSet result = st.executeQuery();
-        while (result.next()) {
-            curAccount.setId(accountId);
-            curAccount.setUsername(result.getString("username"));
+        try (PreparedStatement st = connection.prepareStatement(query)) {
+            st.setInt(1, accountId);
+            try (ResultSet result = st.executeQuery()) {
+                while (result.next()) {
+                    curAccount.setId(accountId);
+                    curAccount.setUsername(result.getString("username"));
+                }
+            }
         }
-
         curr.setId(quizId);
         curr.setAccount(curAccount);
+
+        List<Question> questions = getQuizQuestions(quizId);
+        curr.setQuestions(questions);
 //        this.questions = questions != null ? questions : new ArrayList<Question>();
         return curr;
+    }
+
+    private List<Question> getQuizQuestions(int quizId) throws SQLException {
+        List<Question> quests = new ArrayList<>();
+        String query = "SELECT * FROM questions where quiz_id = ?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, quizId);
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()){
+            String type = rs.getString("question_type");
+            //Question question = null;
+
+            if(Objects.equals(type, "Response")){
+                List<String> answers = getQuestionAnswers(rs.getInt("question_id"),false);
+                quests.add(new QuestionResponse(rs.getString("question_text"), answers));
+            } else if (Objects.equals(type, "Fill")) {
+                List<String> answers = getQuestionAnswers(rs.getInt("question_id"), false);
+                quests.add(new QuestionFill(rs.getString("question_text"), answers));
+            }else if (Objects.equals(type, "MultipleResponse")) {
+                List<String> answers = getQuestionAnswers(rs.getInt("question_id"), false);
+                quests.add(new QuestionMultipleResp(rs.getString("question_text"), answers));
+            }else if (Objects.equals(type, "MultipleChoice")) {
+                List<String> answers = getQuestionAnswers(rs.getInt("question_id"), true);
+                List<String> choices = getQuestionAnswers(rs.getInt("question_id"), false);
+                quests.add(new QuestionMultipleChoice(rs.getString("question_text"), choices, answers));
+            }
+
+        }
+
+        return quests;
+    }
+
+    private List<String> getQuestionAnswers(int questionId, boolean onlyCorrect) throws SQLException {
+        if (questionId <= 0) {
+            throw new IllegalArgumentException("Invalid question ID.");
+        }
+
+        String query = "SELECT answer_text, is_correct FROM answers WHERE question_id = ?";
+        List<String> answers = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    if (!onlyCorrect || rs.getBoolean("is_correct")) {
+                        answers.add(rs.getString("answer_text"));
+                    }
+                }
+            }
+        }
+        return answers;
     }
 
     @Override

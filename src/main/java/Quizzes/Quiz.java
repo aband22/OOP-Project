@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Quiz {
     private static final int NO_ID = -1;
+    private String timer;
     private int id;
     private String title;
     private String category;
@@ -14,8 +15,11 @@ public class Quiz {
     private List<Question> questions;
     private Account acc;
     private String description;
+    private int numCompleted;
+    private int points;
+    private String quizPhoto;
 
-    public Quiz(String title, String category, String description, List<Question> questions, Account acc) {
+    public Quiz(String title, String category, String description, List<Question> questions, Account acc, String timer) {
         this.title = title;
         this.category = category;
         this.creationDate = null;
@@ -23,9 +27,41 @@ public class Quiz {
         this.acc = acc;
         this.id = NO_ID;
         this.description = description;
+        this.timer = timer;
 
     }
 
+    public String getQuizPhoto() {
+        return quizPhoto;
+    }
+
+    public void setQuizPhoto(String quizPhoto) {
+        this.quizPhoto = quizPhoto;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public int getNumCompleted(){
+        return numCompleted;
+    }
+
+    public void setNumCompleted(int numCompleted) {
+        this.numCompleted = numCompleted;
+    }
+
+    public String getTimer() {
+        return timer;
+    }
+
+    public void setTimer(String timer){
+        this.timer = timer;
+    }
     public String getDescription() {
         return description;
     }
