@@ -10,6 +10,7 @@ public class Account {
     private String email;
     private String password;
     private String username;
+    private String status;
 
     public Account(){
 
@@ -20,6 +21,7 @@ public class Account {
         this.password = passwordHash;
         this.username = username;
         this.id = NO_ID;
+        this.status = "";
     }
 
     public int getId() {
@@ -37,6 +39,9 @@ public class Account {
     public String getUsername() {
         return username;
     }
+    public String getStatus() {
+        return status;
+    }
 
     public void setId(int id) {
         this.id = id;
@@ -52,5 +57,8 @@ public class Account {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

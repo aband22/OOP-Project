@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,9 +45,19 @@ public class HomeServlet extends HttpServlet {
         SqlQuizDao store = (SqlQuizDao) request.getServletContext().getAttribute("quizzes_db");
         List<Quiz> foundedQuizzes;
         if(category != null){
-            foundedQuizzes = store.getQuizByCategory(category);
+            try {
+                foundedQuizzes = store.getQuizByCategory(category);
+            } catch (SQLException e) {
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
+            }
         } else {
-            foundedQuizzes = store.getQuizzesFromSearch(searchedItem);
+            try {
+                foundedQuizzes = store.getQuizzesFromSearch(searchedItem);
+            } catch (SQLException e) {
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
+            }
         }
         request.getServletContext().setAttribute("quizzes", foundedQuizzes);
         request.getRequestDispatcher("/SearchPage.jsp").forward(request, response);

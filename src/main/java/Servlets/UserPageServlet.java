@@ -2,6 +2,8 @@ package Servlets;
 
 import Accounts.*;
 import Quizzes.Quiz;
+import Quizzes.SqlQuizDao;
+import Quizzes.SqlQuizzesHistoryDao;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -28,12 +30,23 @@ public class UserPageServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        int userId = Integer.parseInt(request.getParameter("user"));
-        int curUserId = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
+        String user = request.getParameter("user");
+        if(user == null) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+        int userId = Integer.parseInt(user);
+        request.setAttribute("userId", userId);
+        user = (String) request.getSession().getAttribute("curUser");
+        int curUserId = 0;
+        if(user != null)  curUserId = Integer.parseInt(user);
 
         SqlAccountInfoDao accInfo = (SqlAccountInfoDao) getServletContext().getAttribute("accountInfo_db");
         SqlAccountDao accountStore = (SqlAccountDao) getServletContext().getAttribute("accounts_db");
         SqlNotificationDao notificationsInfo = (SqlNotificationDao) getServletContext().getAttribute("notifications_db");
+        SqlAchievementDao achievementStore = (SqlAchievementDao) getServletContext().getAttribute("achievements_db");
+        SqlQuizzesHistoryDao quizzesInfo = (SqlQuizzesHistoryDao) getServletContext().getAttribute("quizzesHistory_db");
+        SqlQuizDao quizStore = (SqlQuizDao) getServletContext().getAttribute("quizzes_db");
 
         List<Quiz> myQuizzes;
         List<Integer> friendsId;
@@ -41,31 +54,71 @@ public class UserPageServlet extends HttpServlet {
         try {
             account = accountStore.GetAccountById(userId);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
-        myQuizzes = accInfo.getCreatedQuizzes(userId);
-        friendsId = accInfo.getAllFriendsId(userId);
+        try {
+            myQuizzes = accInfo.getCreatedQuizzes(userId);
+        } catch (SQLException e) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+        try {
+            friendsId = accInfo.getAllFriendsId(userId);
+        } catch (SQLException e) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
         List<Account> friends = new ArrayList<>();
-        for (int i = 0; i < friendsId.size(); i++) {
+        for (Integer integer : friendsId) {
             try {
-                friends.add(accountStore.GetAccountById(friendsId.get(i)));
+                friends.add(accountStore.GetAccountById(integer));
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
             }
         }
+
+        List<Achievement> achievements;
+        try {
+            achievements = achievementStore.getAll(userId);
+        } catch (SQLException e) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+
+        List<Integer> quizzesIds = quizzesInfo.getDoneQuizzesId(userId);
+        List<Quiz> quizzes = new ArrayList<>();
+        for (Integer integer : quizzesIds) {
+            try {
+                quizzes.add(quizStore.getQuizById(integer));
+            } catch (SQLException e) {
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
+            }
+        }
+
         request.setAttribute("account", account);
-        request.setAttribute("quizzes", myQuizzes);
-        request.setAttribute("friends", friends);
+        request.getServletContext().setAttribute("quizzes", myQuizzes);
+        request.getServletContext().setAttribute("achievements", achievements);
+        request.getServletContext().setAttribute("friends", friends);
+        request.getServletContext().setAttribute("quizzesDone", quizzes);
         request.setAttribute("curUserId", curUserId);
         request.setAttribute("userId", userId);
 
         int isFriend = 0;
-        if(accInfo.isFriend(curUserId, userId)) isFriend = 1;
+        try {
+            if(accInfo.isFriend(curUserId, userId)) isFriend = 1;
+        } catch (SQLException e) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
         try {
             if(notificationsInfo.isSentFriendNotification(curUserId, userId)) isFriend = 2;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
         request.setAttribute("isFriend", "" + isFriend);
@@ -75,8 +128,19 @@ public class UserPageServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int userId = Integer.parseInt(request.getParameter("user"));
-        int curUserId = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
+        String user = request.getParameter("user");
+        if(user == null) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+        int userId = Integer.parseInt(user);
+        request.setAttribute("userId", userId);
+        user = (String) request.getSession().getAttribute("curUser");
+        if(user == null) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+        int curUserId = Integer.parseInt(user);
 
         SqlNotificationDao notificationsInfo = (SqlNotificationDao) getServletContext().getAttribute("notifications_db");
         if(Objects.equals(request.getParameter("addFriend"), "addFriend")){
@@ -90,7 +154,7 @@ public class UserPageServlet extends HttpServlet {
             //request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
             response.sendRedirect("user?user=" + userId);
             return;
-        } else if(Objects.equals(request.getParameter("pending"), "pending") || Objects.equals(request.getParameter("friend"), "friend")){
+        } else if(Objects.equals(request.getParameter("pending"), "pending")){
             Notification notification = new Notification(userId, curUserId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
             try {
                 notificationsInfo.remove(notification);
@@ -99,6 +163,15 @@ public class UserPageServlet extends HttpServlet {
             }
 
             //request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
+            response.sendRedirect("user?user=" + userId);
+            return;
+        } else if (Objects.equals(request.getParameter("friend"), "friend")) {
+            SqlAccountInfoDao accInfo = (SqlAccountInfoDao) getServletContext().getAttribute("accountInfo_db");
+            try {
+                accInfo.removeFriend(curUserId, userId);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
             response.sendRedirect("user?user=" + userId);
             return;
         }

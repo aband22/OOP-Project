@@ -28,8 +28,8 @@
     </c:choose>
     <div class = "signUp">
         <form action = "signUp" method = "post">
-            <input class="form-control me-2" type="email" placeholder="ელფოსტა" aria-label="Search" name = "email" id = "email">
             <input class="form-control me-2" type="text" placeholder="სახელი" aria-label="Search" name = "username" id = "username">
+            <input class="form-control me-2" type="email" placeholder="ელფოსტა" aria-label="Search" name = "email" id = "email">
             <input class="form-control me-2" type="password" placeholder="პაროლი" aria-label="Search" name = "password" id = "password">
             <button class="btn btn-success size" type="submit" id = "signup">რეგისტრაცია</button>
         </form>

@@ -87,12 +87,10 @@ public class SqlAccountDao implements AccountDao {
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setInt(1, accountId);
             try (ResultSet rs = statement.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getString("username");
-                }
+                rs.next();
+                return rs.getString("username");
             }
         }
-        return null;
     }
 
     @Override
@@ -101,15 +99,13 @@ public class SqlAccountDao implements AccountDao {
         PreparedStatement statement = connection.prepareStatement(acc);
         statement.setInt(1,accountId);
         ResultSet rs = statement.executeQuery();
-        if(rs.next()){
-            Account account  = new Account();
-            account.setEmail(rs.getString("email_address"));
-            account.setId(rs.getInt("account_id"));
-            account.setUsername(rs.getString("username"));
-            account.setPassword(rs.getString("password_hash"));
-            return account;
-        }
-        return null;
+        rs.next();
+        Account account  = new Account();
+        account.setEmail(rs.getString("email_address"));
+        account.setId(rs.getInt("account_id"));
+        account.setUsername(rs.getString("username"));
+        account.setPassword(rs.getString("password_hash"));
+        return account;
     }
 
    public void editAccount(Account acc){

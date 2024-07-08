@@ -20,13 +20,19 @@ public class NotificationsServlet extends HttpServlet {
     private static final String CHANGE_THIS_TO_YOUR_DB_NAME = "oop";
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        int userID = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
+        String user = (String) request.getSession().getAttribute("curUser");
+        if(user == null) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+        int userID = Integer.parseInt(user);
         SqlNotificationDao notifications = (SqlNotificationDao) request.getServletContext().getAttribute("notifications_db");
         List<Notification> userNotifications;
         try {
             userNotifications = notifications.getAll(userID);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
         request.getServletContext().setAttribute("notifications", userNotifications);
 
@@ -37,14 +43,15 @@ public class NotificationsServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         SqlAccountInfoDao accountInfo = (SqlAccountInfoDao) getServletContext().getAttribute("accountInfo_db");
         SqlNotificationDao notificationsInfo = (SqlNotificationDao) getServletContext().getAttribute("notifications_db");
-        int curUserId = Integer.parseInt((String) request.getServletContext().getAttribute("curUser"));
+        int curUserId = Integer.parseInt((String) request.getSession().getAttribute("curUser"));
         int userId = Integer.parseInt(request.getParameter("user"));
         if(Objects.equals(request.getParameter("admit"), "admit")) {
             Notification notification = new Notification(curUserId, userId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
             try {
                 notificationsInfo.remove(notification);
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
             }
             try {
                 if(notificationsInfo.isSentFriendNotification(curUserId, userId)){
@@ -52,10 +59,16 @@ public class NotificationsServlet extends HttpServlet {
                     notificationsInfo.remove(notification);
                 }
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
             }
 
-            accountInfo.addFriend(curUserId, userId);
+            try {
+                accountInfo.addFriend(curUserId, userId);
+            } catch (SQLException e) {
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
+            }
             String chatName;
             if (curUserId > userId) chatName = "chat" + userId + curUserId;
             else chatName = "chat" + curUserId + userId;
@@ -67,18 +80,20 @@ public class NotificationsServlet extends HttpServlet {
                         "message_id INT AUTO_INCREMENT," +
                         "account_id INT," +
                         "message_text VARCHAR(255)," +
-                        "send_date DATE," +
+                        "send_date Timestamp," +
                         "PRIMARY KEY(message_id)," +
                         "FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE);");
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
             }
         } else if(Objects.equals(request.getParameter("reject"), "reject")){
             Notification notification = new Notification(curUserId, userId, Notification.FRIEND_REQUEST, Notification.FRIEND_REQUEST_TEXT);
             try {
                 notificationsInfo.remove(notification);
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
             }
         } else if(Objects.equals(request.getParameter("forwardToQuiz"), "forwardToQuiz")){
             int quizId = Integer.parseInt(request.getParameter("quiz"));
@@ -86,7 +101,8 @@ public class NotificationsServlet extends HttpServlet {
             try {
                 notificationsInfo.remove(notificationId);
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
             }
             response.sendRedirect("quiz?quiz=" + quizId);
             return;

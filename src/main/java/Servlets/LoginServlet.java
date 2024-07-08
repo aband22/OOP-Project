@@ -21,7 +21,7 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.getServletContext().removeAttribute(LOGGED_IN_STATUS);
-        request.getServletContext().setAttribute(USER, "" + 0);
+        request.getSession().removeAttribute(USER);
         request.getRequestDispatcher("/LoginPage.jsp").forward(request, response);
 //        ServletContext context = request.getServletContext();
 //        AccountDao store;
@@ -50,7 +50,8 @@ public class LoginServlet extends HttpServlet {
         try {
             passFromDB = db.getAccPass(email);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
         try {
@@ -60,13 +61,15 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
         PasswordHashMaker passHash;
         try {
             passHash = new PasswordHashMaker(password);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
         if(!Objects.equals(passFromDB, passHash.getPasswordHash())){
             request.setAttribute(ILLEGAL, ILLEGAL);
@@ -77,14 +80,16 @@ public class LoginServlet extends HttpServlet {
         try {
             request.getServletContext().setAttribute("username", db.getUserName(email));
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
         try {
             //response.addCookie(new Cookie(USER, "" + db.getUserID(email)));
-            request.getServletContext().setAttribute(USER, "" + db.getUserID(email));
+            request.getSession().setAttribute(USER, "" + db.getUserID(email));
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
         request.getServletContext().setAttribute(LOGGED_IN_STATUS, "in");
         response.sendRedirect("home");

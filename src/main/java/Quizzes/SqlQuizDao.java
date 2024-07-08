@@ -18,13 +18,13 @@ public class SqlQuizDao implements QuizDao {
     public void add(Quiz quiz) throws SQLException {
         String query = "INSERT INTO quizzes (account_id, quiz_title, quiz_category, quiz_creation_date, num_completed) " +
                 "VALUES (?, ?, ?, SYSDATE(), ?)";
-        try (PreparedStatement st = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
-            st.setInt(1, quiz.getAccount().getId());
-            st.setString(2, quiz.getTitle());
-            st.setString(3, quiz.getCategory());
-            st.setInt(4, 0);
-            st.executeUpdate();
-        }
+        PreparedStatement st = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+        st.setInt(1, quiz.getAccount().getId());
+        st.setString(2, quiz.getTitle());
+        st.setString(3, quiz.getCategory());
+        st.setInt(4, 0);
+        st.executeUpdate();
+
     }
 
     private Quiz getQuiz(ResultSet rs) throws SQLException {
@@ -37,15 +37,14 @@ public class SqlQuizDao implements QuizDao {
         int accountId = rs.getInt("account_id");
         int quizId = rs.getInt("quiz_id");
         String query = "SELECT username from accounts WHERE account_id = ?";
-        try (PreparedStatement st = connection.prepareStatement(query)) {
-            st.setInt(1, accountId);
-            try (ResultSet result = st.executeQuery()) {
-                while (result.next()) {
-                    curAccount.setId(accountId);
-                    curAccount.setUsername(result.getString("username"));
-                }
-            }
+        PreparedStatement st = connection.prepareStatement(query);
+        st.setInt(1, accountId);
+        ResultSet result = st.executeQuery();
+        while (result.next()) {
+            curAccount.setId(accountId);
+            curAccount.setUsername(result.getString("username"));
         }
+
         curr.setId(quizId);
         curr.setAccount(curAccount);
 //        this.questions = questions != null ? questions : new ArrayList<Question>();
@@ -53,72 +52,53 @@ public class SqlQuizDao implements QuizDao {
     }
 
     @Override
-    public List<Quiz> getQuizByCategory(String category) {
+    public List<Quiz> getQuizByCategory(String category) throws SQLException {
         List<Quiz> curQuizzes = new ArrayList<>();
         String query = "SELECT * FROM quizzes WHERE quiz_category = ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, category);
-            try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                    curQuizzes.add(getQuiz(result));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching quizzes by category: " + e.getMessage());
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, category);
+        ResultSet result = statement.executeQuery();
+        while (result.next()) {
+            curQuizzes.add(getQuiz(result));
         }
         return curQuizzes;
     }
 
     @Override
-    public List<Quiz> getPopularQuizzes(int num) {
+    public List<Quiz> getPopularQuizzes(int num) throws SQLException {
         List<Quiz> popularQuizzes = new ArrayList<>();
         String query = "SELECT * FROM quizzes ORDER BY num_completed DESC LIMIT ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, num);
-            try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                    popularQuizzes.add(getQuiz(result));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching popular quizzes: " + e.getMessage());
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, num);
+        ResultSet result = statement.executeQuery();
+        while (result.next()) {
+            popularQuizzes.add(getQuiz(result));
         }
         return popularQuizzes;
     }
 
     @Override
-    public List<Quiz> getRecentQuizzes(int num) {
+    public List<Quiz> getRecentQuizzes(int num) throws SQLException {
         List<Quiz> recentQuizzes = new ArrayList<>();
         String query = "SELECT * FROM quizzes ORDER BY quiz_creation_date DESC LIMIT ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, num);
-            try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                    recentQuizzes.add(getQuiz(result));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching recent quizzes: " + e.getMessage());
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, num);
+        ResultSet result = statement.executeQuery();
+        while (result.next()) {
+            recentQuizzes.add(getQuiz(result));
         }
         return recentQuizzes;
     }
 
     @Override
-    public Quiz getQuizById(int id) {
+    public Quiz getQuizById(int id) throws SQLException {
         String query = "SELECT * FROM quizzes WHERE quiz_id = ?";
-        Quiz curQuiz = null;
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setInt(1, id);
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setInt(1, id);
 
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    curQuiz = getQuiz(resultSet);
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error fetching quiz by id: " + e.getMessage());
-        }
-        return curQuiz;
+        ResultSet resultSet = statement.executeQuery();
+        resultSet.next();
+        return getQuiz(resultSet);
     }
 
     @Override
@@ -130,19 +110,16 @@ public class SqlQuizDao implements QuizDao {
     }
 
     @Override
-    public List<Quiz> getQuizzesFromSearch(String search) {
+    public List<Quiz> getQuizzesFromSearch(String search) throws SQLException {
         List<Quiz> searchResults = new ArrayList<>();
         String query = "SELECT * FROM quizzes WHERE quiz_title LIKE ?";
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, "%" + search + "%");
-            try (ResultSet result = statement.executeQuery()) {
-                while (result.next()) {
-                    searchResults.add(getQuiz(result));
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException("Error searching quizzes: " + e.getMessage());
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1, "%" + search + "%");
+        ResultSet result = statement.executeQuery();
+        while (result.next()) {
+            searchResults.add(getQuiz(result));
         }
+
         return searchResults;
     }
 }

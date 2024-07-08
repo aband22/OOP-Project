@@ -1,9 +1,10 @@
 USE YOUR_DATABASE;
   -- >>>>>>>>>>>> change this line so it uses your database, not mine <<<<<<<<<<<<<<<
 DROP TABLE IF EXISTS achievements;
-DROP TABLE IF EXISTS quizzes;
 DROP TABLE IF EXISTS friends;
 DROP TABLE IF EXISTS notifications;
+DROP TABLE IF EXISTS quizzesHistory;
+DROP TABLE IF EXISTS quizzes;
 DROP TABLE IF EXISTS accounts;
  -- remove table if it already exists and start from scratch
 
@@ -12,6 +13,7 @@ CREATE TABLE accounts (
     email_address CHAR(64),
     username CHAR(64),
     password_hash CHAR(64),
+    status_ CHAR(64),
     primary key(account_id)
 );
 
@@ -57,4 +59,15 @@ CREATE TABLE achievements (
       achievement_text VARCHAR(225),
       PRIMARY KEY(achievement_id),
       FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE
+);
+
+CREATE TABLE quizzesHistory (
+    quizzesHistory_id INT AUTO_INCREMENT,
+    quiz_id int,
+    account_id int,
+    score int,
+    done_date TIMESTAMP,
+    primary key (quizzesHistory_id),
+    FOREIGN KEY (account_id) REFERENCES accounts(account_id) ON DELETE CASCADE,
+    FOREIGN KEY (quiz_id) REFERENCES quizzes(quiz_id) ON DELETE CASCADE
 );

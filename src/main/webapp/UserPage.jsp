@@ -1,5 +1,10 @@
 
-<%@ page import="Accounts.Account" %><%--
+<%@ page import="Accounts.Account" %>
+<%@ page import="java.util.List" %>
+<%@ page import="Accounts.Achievement" %>
+<%@ page import="Quizzes.Quiz" %>
+<%@ page import="java.sql.Timestamp" %>
+<%@ page import="Quizzes.SqlQuizzesHistoryDao" %><%--
   Created by IntelliJ IDEA.
   User: taso
   Date: 20.06.2024
@@ -73,56 +78,204 @@
 
             </c:when>
             <c:otherwise>
-                <form action="user?user=${userId}" method="post" id="friendStatus">
-                    <c:choose>
-                        <c:when test="${isFriend == 0}">
-                            <input type="hidden" id="addFriend" name="addFriend">
-                            <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('addFriend')">მეგობრის დამატება</button>
-                        </c:when>
-                        <c:when test="${isFriend == 2}">
-                            <input type="hidden" id="pending" name="pending">
-                            <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('pending')">მეგობრობის მოთხოვნა გაგზავნილია</button>
-                        </c:when>
-                        <c:otherwise>
-                            <input type="hidden" id="friend" name="friend">
-                            <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('friend')">მეგობრები</button>
-                        </c:otherwise>
-                    </c:choose>
-                </form>
+                <c:choose>
+                    <c:when test="${logged_in_status != null}">
+                        <form action="user?user=${userId}" method="post" id="friendStatus">
+                            <c:choose>
+                                <c:when test="${isFriend == 0}">
+                                    <input type="hidden" id="addFriend" name="addFriend">
+                                    <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('addFriend')">მეგობრის დამატება</button>
+                                </c:when>
+                                <c:when test="${isFriend == 2}">
+                                    <input type="hidden" id="pending" name="pending">
+                                    <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('pending')">მეგობრობის მოთხოვნა გაგზავნილია</button>
+                                </c:when>
+                                <c:otherwise>
+                                    <input type="hidden" id="friend" name="friend">
+                                    <button class="btn btn-primary" type="submit" onclick="setAttributeAndSubmit('friend')">მეგობრები</button>
+                                </c:otherwise>
+                            </c:choose>
+                        </form>
+                    </c:when>
+                </c:choose>
             </c:otherwise>
         </c:choose>
         <div id="info" class="content active">
             <h2>ინფორმაცია</h2>
             <p>სახელი: <%= ((Account) request.getAttribute("account")).getUsername() %></p>
-            <p>ელ-ფოსტა: <%= ((Account) request.getAttribute("account")).getEmail() %></p>
-            <p>პაროლი: ?</p>
+            <p>სტატუსი: <%= ((Account) request.getAttribute("account")).getStatus() %></p>
         </div>
         <div id="history" class="content">
-            <h2>ისტორია</h2>
-            <p>ბლაბლა</p>
+            <%  List<Quiz> quizzes = (List<Quiz>)application.getAttribute("quizzesDone");
+                SqlQuizzesHistoryDao quizzesInfo = (SqlQuizzesHistoryDao)application.getAttribute("quizzesHistory_db");
+                for(int i = 0; i < quizzes.size(); i++){
+                    Quiz quiz = quizzes.get(i);
+                    int quizId = quiz.getId();
+                    String name = quiz.getTitle();
+                    String category = quiz.getCategory();
+                    String owner = quiz.getAccount().getUsername();
+                    Timestamp uploadTime = quiz.getCreationDate();
+                    Timestamp currentTimeMillis = new Timestamp(System.currentTimeMillis());
+                    long durationInMillis = currentTimeMillis.getTime() - uploadTime.getTime();
+                    int duration = (int)durationInMillis / (60 * 1000);
+                    String timeText = "წუთის";
+                    if(duration > 59){
+                        duration = duration / 60;
+                        timeText = "საათის";
+                    }
+                    if(duration > 23){
+                        duration = duration / 24;
+                        timeText = "დღის";
+                    }
+                    if(duration > 30){
+                        duration = duration / 30;
+                        timeText = "თვის";
+                    }
+                    if(duration > 11){
+                        duration = duration / 12;
+                        timeText = "წლის";
+                    }
+
+                    int score = quizzesInfo.getScore(quizId, ((Account) request.getAttribute("account")).getId());
+            %>
+            <div class="col-md-6">
+                <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quizID=<%=quizId%>">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="..." class="img-fluid rounded-start" alt="...">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title"><%=name%>
+                                    <%=score%>/
+                                </h5>
+                                <h6 class="card-text">
+                                    <ul>
+                                        <li style="color: rgb(0, 98, 255);"><%=owner%></li>
+                                        <li style="color: rgb(9, 255, 0);"><%=category%></li>
+                                        <li>Time to</li>
+                                    </ul>
+                                </h6>
+                                <p class="card-text"><small class="text-body-secondary">გამოქვეყნდა <%=duration%> <%=timeText%> წინ</small></p>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <% } %>
         </div>
         <div id="friends" class="content">
-            <h2>მეგობრები</h2>
-            <p>მარტოსული</p>
+            <%
+                List<Account> friends = (List<Account>) application.getAttribute("friends");
+                for (int i = 0; i < friends.size(); i++) {
+                    int friendId = friends.get(i).getId();
+                    String friendName = friends.get(i).getUsername();
+            %>
+            <a class="card ragaca" style="max-width: 840px; border: white;" href="user?user=<%=friendId%>">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="<%=friendId%>.jpg" class="img-fluid" alt="Photo" width="50" height="50">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 style="font-weight: bold;"><%=friendName%></h5>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <% } %>
         </div>
         <div id="achievements" class="content">
-            <h2>მიღწევები</h2>
-            <p>წარმატებული ახალგაზრდა!</p>
+            <%
+                List<Achievement> achievements = (List<Achievement>) application.getAttribute("achievements");
+                for (int i = 0; i < achievements.size(); i++) {
+                    String achievementType = achievements.get(i).getType();
+                    String achievementText = achievements.get(i).getText();
+
+            %>
+            <div class="card" style="max-width: 840px; border: white;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="<%=achievementType%>.jpg" class="img-fluid" alt="Photo" width="50" height="50">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h6><%=achievementType%></h6>
+                            <h6 class="card-text"><%=achievementText%>></h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <% } %>
         </div>
         <div id="quizzes" class="content">
-            <h2>ჩემი ქვიზები</h2>
-            <p>ქვიზი 1</p>
+            <%
+                List<Quiz> myQuizzes = (List<Quiz>) application.getAttribute("quizzes");
+                for(int i = 0; i < myQuizzes.size(); i++) {
+                    Quiz quiz = myQuizzes.get(i);
+                    int quizId = quiz.getId();
+                    String quizCategory = quiz.getCategory();
+                    String quizTitle = quiz.getTitle();
+                    Timestamp uploadTime = quiz.getCreationDate();
+                    Timestamp currentTimeMillis = new Timestamp(System.currentTimeMillis());
+                    long durationInMillis = currentTimeMillis.getTime() - uploadTime.getTime();
+                    int duration = (int)durationInMillis / (60 * 1000);
+                    String timeText = "წუთის";
+                    if(duration > 59){
+                        duration = duration / 60;
+                        timeText = "საათის";
+                    }
+                    if(duration > 23){
+                        duration = duration / 24;
+                        timeText = "დღის";
+                    }
+                    if(duration > 30){
+                        duration = duration / 30;
+                        timeText = "თვის";
+                    }
+                    if(duration > 11){
+                        duration = duration / 12;
+                        timeText = "წლის";
+                    }
+
+            %>
+            <a class="card mb-3" style="max-width: 840px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quiz=<%=quizId%>">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="<%=quizId%>.png" class="img-fluid rounded-start" alt="...">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <form action="notifications" method="post" id="buttonStatus">
+                                <input type="hidden" id="admit" name="admit">
+                                <p class="card-title"><%=quizTitle%>
+                                    <button type="button" class="btn btn-outline-warning">რედაქტირება</button>
+                                    <button type="button" class="btn btn-outline-danger"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"></path>
+                                        <path d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"></path>
+                                    </svg></button>
+                                </p>
+                            </form>
+
+                            <h6 class="card-text">
+                                <ul class="smaller">
+                                    <li style="color: rgb(9, 255, 0);"><%=quizCategory%></li>
+                                    <li>Time to solve: 10 min</li>
+                                </ul>
+                            </h6>
+                            <p class="card-text"><small class="text-body-secondary">გამოქვეყნდა <%=duration%> <%=timeText%> წინ</small></p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <% } %>
         </div>
         <div id="edit" class="content">
             <h2>რედაქტირება</h2>
-            <form action="user" method="post" id="editForm" enctype="multipart/form-data" onsubmit="save()">
+            <form action="user?user=${userId}" method="post" id="editForm" enctype="multipart/form-data" onsubmit="save()">
                 <div class="form-edit">
                     <label for="usernameEdit">სახელი:</label>
                     <input type="text" id="usernameEdit" name="username">
-                </div>
-                <div class="form-edit">
-                    <label for="mailEdit">ელ-ფოსტა:</label>
-                    <input type="text" id="mailEdit" name="mail" value="<%= ((Account) request.getAttribute("account")).getEmail() %>">
                 </div>
                 <div class="form-edit">
                     <label for="newPassword">ახალი პაროლი:</label>

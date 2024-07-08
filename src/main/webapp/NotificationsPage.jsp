@@ -75,7 +75,7 @@
                     String text = notification.getText();
                     int from_id = notification.getFromId();
                     String name;
-                    if(from_id != -1) name = ((SqlAccountDao)application.getAttribute("accounts_db")).GetAccountById(from_id).getUsername();
+                    if(from_id != -1) name = ((SqlAccountDao)application.getAttribute("accounts_db")).getNameById(from_id);
                     else name = "";
           %>
           <div class="card mb-9 btn" style="max-width: 540px; border: white;">

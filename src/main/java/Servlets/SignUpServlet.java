@@ -49,21 +49,24 @@ public class SignUpServlet extends HttpServlet {
                 return;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
         PasswordHashMaker passHash;
         try {
             passHash = new PasswordHashMaker(password);
         } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
         Account acc = new Account(email, passHash.getPasswordHash(), username);
         try {
             db.add(acc);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
         request.getServletContext().setAttribute("username", username);
@@ -71,10 +74,11 @@ public class SignUpServlet extends HttpServlet {
         try {
             currID = db.getUserID(email);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
-        request.getServletContext().setAttribute(USER, "" + currID);
+        request.getSession().setAttribute(USER, "" + currID);
         request.getServletContext().setAttribute(LOGGED_IN_STATUS, "in");
 
         response.sendRedirect("home");

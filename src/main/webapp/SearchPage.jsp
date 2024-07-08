@@ -103,7 +103,7 @@
                     </div>
                     <div class="col-md-8">
                       <div class="card-body">
-                        <h3 class="card-title"><%=name%></h5>
+                        <h5 class="card-title"><%=name%></h5>
                         <h6 class="card-text">
                             <ul>
                                 <li style="color: rgb(0, 98, 255);"><%=owner%></li>
@@ -111,7 +111,7 @@
                                 <li>Time to</li>
                             </ul>
                         </h6>
-                        <p class="card-text"><small class="text-body-secondary">გამოქვეყნდა <%=durationInMinutes%> <%=timeText%> წინ</small></p>
+                        <p class="card-text"><small class="text-body-secondary">გამოქვეყნდა <%=duration%> <%=timeText%> წინ</small></p>
                       </div>
                     </div>
                   </div>
