@@ -10,4 +10,5 @@ public interface QuizzesHistoryDao {
     List<Integer> getScorersId(int quizId) throws SQLException;
     int getScore(int quizId, int accountId) throws SQLException;
     Timestamp getDate(int quizId, int accountId) throws SQLException;
+    boolean hasDoneQuiz(int quizId, int accountId) throws SQLException;
 }

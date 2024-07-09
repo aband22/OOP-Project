@@ -76,4 +76,9 @@ public class SqlQuizzesHistoryDao implements QuizzesHistoryDao{
         rs.next();
         return rs.getTimestamp(1);
     }
+
+    @Override
+    public boolean hasDoneQuiz(int quizId, int accountId) throws SQLException {
+        return false;
+    }
 }
