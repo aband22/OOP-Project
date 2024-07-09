@@ -16,17 +16,16 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script type="text/javascript">
         $(document).ready(function() {
-            // Function to update chat messages
             function updateChat() {
                 $.ajax({
                     url: "message?friendId=${friendId}",
                     type: "GET",
                     success: function(data) {
-                        $("#chatMessages").html(data); // Update chat messages
+                        $("#chatMessages").html(data);
                     },
-                    error: function(jqXHR, textStatus, errorThrown) {
-                        console.log("Error: " + textStatus);
-                    }
+                    // error: function(jqXHR, textStatus, errorThrown) {
+                    //     console.log("Error: " + textStatus);
+                    // }
                 });
             }
 
@@ -38,7 +37,7 @@
                 var message = $("#messageInput").val().trim();
                 if (message !== "") {
                     $.post("message?friendId=${friendId}", { message: message });
-                    $("#messageInput").val(""); // Clear input field after sending message
+                    $("#messageInput").val("");
                 }
             });
         });
@@ -91,10 +90,10 @@
         %>
         <a class="card" style="max-width: 840px; border: white;" href="chat?friendId=<%=friendId%>">
             <div class="row g-0">
-                <div class="col-md-4">
-                    <img src="photos/<%=friendId%>.png" class="img-fluid" alt="Photo" width="50" height="50">
+                <div class="col-md-2">
+                    <img src="photos/<%=friendId%>.png" class="img-fluid" alt="Photo" width="50" height="50" style="border-radius: 100%">
                 </div>
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card-body">
                         <h5 style="font-weight: bold;"><%=friendName%></h5>
                     </div>

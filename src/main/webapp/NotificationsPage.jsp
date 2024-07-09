@@ -68,15 +68,18 @@
     <div class="container center">
           <%
                 List<Notification> notifications = (List)application.getAttribute("notifications");
-                for(int i = 0; i < notifications.size(); i++){
-                    Notification notification = notifications.get(i);
-                    int notification_id = notification.getId();
-                    String title = notification.getType();
-                    String text = notification.getText();
-                    int from_id = notification.getFromId();
-                    String name;
-                    if(from_id != -1) name = ((SqlAccountDao)application.getAttribute("accounts_db")).getNameById(from_id);
-                    else name = "";
+                if(notifications.isEmpty()){%>
+                <h6 style="align-content: center; padding-top: 200px">ცნობები არ არის</h6>
+          <%    } else {
+                    for(int i = 0; i < notifications.size(); i++){
+                        Notification notification = notifications.get(i);
+                        int notification_id = notification.getId();
+                        String title = notification.getType();
+                        String text = notification.getText();
+                        int from_id = notification.getFromId();
+                        String name;
+                        if(from_id != -1) name = ((SqlAccountDao)application.getAttribute("accounts_db")).getNameById(from_id);
+                        else name = "";
           %>
           <div class="card mb-9 btn" style="max-width: 540px; border: white;">
             <div class="row g-0">
@@ -109,7 +112,7 @@
               </div>
             </div>
           </div>
-          <% } %>
+          <% }} %>
     </div>
 </body>
 <script>

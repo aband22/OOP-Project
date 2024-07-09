@@ -140,7 +140,7 @@
                     int score = quizzesInfo.getScore(quizId, ((Account) request.getAttribute("account")).getId());
             %>
             <div class="col-md-6">
-                <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quizID=<%=quizId%>">
+                <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quiz=<%=quizId%>">
                     <div class="row g-0">
                         <div class="col-md-4">
                             <img src="<%=photo%>" class="img-fluid rounded-start" alt="...">
@@ -175,7 +175,7 @@
             <a class="card ragaca" style="max-width: 840px; border: white;" href="user?user=<%=friendId%>">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="photos/<%=friendId%>.png" class="img-fluid" alt="Photo" width="50" height="50">
+                        <img src="photos/<%=friendId%>.png" class="img-fluid" alt="Photo" width="50" height="50" style="border-radius: 100%">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">

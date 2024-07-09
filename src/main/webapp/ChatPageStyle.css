@@ -1,3 +1,9 @@
+a {
+    text-decoration: none;
+}
+.card:hover{
+    background-color: rgb(198, 198, 198);
+}
 body {
     height: 100vh;
     margin: 0;
@@ -26,7 +32,6 @@ body {
 }
 .friend-list a {
     display: flex;
-    align-items: center;
     height: calc(100% / 10);
     padding-left: 25px;
 }
