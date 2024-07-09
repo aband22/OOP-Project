@@ -216,6 +216,9 @@
                     String photo = quiz.getQuizPhoto();
                     int quizId = quiz.getId();
                     String quizCategory = quiz.getCategory();
+                    System.out.println(photo);
+                    System.out.println(quizId);
+                    System.out.println(quizCategory);
                     String quizTitle = quiz.getTitle();
                     Timestamp uploadTime = quiz.getCreationDate();
                     Timestamp currentTimeMillis = new Timestamp(System.currentTimeMillis());

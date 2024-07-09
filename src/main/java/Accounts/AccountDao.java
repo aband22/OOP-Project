@@ -12,4 +12,6 @@ public interface AccountDao {
     boolean emailExist(String email) throws SQLException;
     String getNameById(int accountId)  throws SQLException;
     Account getAccountById(int accountId) throws SQLException;
+    void editAccount(Account acc) throws SQLException;
+    void setStatus(int accountId, String status) throws SQLException;
 }

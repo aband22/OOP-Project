@@ -132,7 +132,7 @@ public class SqlQuizDao implements QuizDao {
         curr.setCreationDate(rs.getTimestamp("quiz_creation_date"));
         curr.setTimer(rs.getString("quiz_timer"));
         curr.setNumCompleted(rs.getInt("num_completed"));
-        curr.setQuizPhoto("quiz_photo");
+        curr.setQuizPhoto(rs.getString("quiz_photo"));
         Account curAccount = new Account();
         int accountId = rs.getInt("account_id");
         int quizId = rs.getInt("quiz_id");

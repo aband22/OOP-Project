@@ -62,6 +62,8 @@ public class SqlAccountInfoDao implements AccountInfoDao {
             curr.setTitle(rs.getString("quiz_title"));
             curr.setCategory(rs.getString("quiz_category"));
             curr.setCreationDate(rs.getTimestamp("quiz_creation_date"));
+            curr.setId(rs.getInt("quiz_id"));
+            curr.setQuizPhoto(rs.getString("quiz_photo"));
             quizzes.add(curr);
         }
         return quizzes;

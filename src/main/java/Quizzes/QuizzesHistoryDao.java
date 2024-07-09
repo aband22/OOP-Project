@@ -9,6 +9,7 @@ public interface QuizzesHistoryDao {
     List<Integer> getDoneQuizzesId(int accountId) throws SQLException;
     List<Integer> getScorersId(int quizId) throws SQLException;
     int getScore(int quizId, int accountId) throws SQLException;
+    void setScore(int quizId, int accountId, int score) throws SQLException;
     Timestamp getDate(int quizId, int accountId) throws SQLException;
     boolean hasDoneQuiz(int quizId, int accountId) throws SQLException;
 }

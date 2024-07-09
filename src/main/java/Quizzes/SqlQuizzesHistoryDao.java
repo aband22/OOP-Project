@@ -68,6 +68,16 @@ public class SqlQuizzesHistoryDao implements QuizzesHistoryDao{
     }
 
     @Override
+    public void setScore(int quizId, int accountId, int score) throws SQLException {
+        String st = "update quizzesHistory Set score = ? where account_id = ? AND quiz_id = ?";
+        PreparedStatement statement = connection.prepareStatement(st);
+        statement.setInt(1, score);
+        statement.setInt(2, accountId);
+        statement.setInt(3, quizId);
+        statement.executeUpdate();
+    }
+
+    @Override
     public Timestamp getDate(int quizId, int accountId) throws SQLException {
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(
@@ -79,6 +89,11 @@ public class SqlQuizzesHistoryDao implements QuizzesHistoryDao{
 
     @Override
     public boolean hasDoneQuiz(int quizId, int accountId) throws SQLException {
-        return false;
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(
+                "SELECT * FROM quizzesHistory Where quiz_id = " + '"' + quizId + '"' + "AND account_id = " + '"' + accountId + '"'
+        );
+        rs.next();
+        return  rs.next();
     }
 }

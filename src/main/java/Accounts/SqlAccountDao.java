@@ -106,20 +106,27 @@ public class SqlAccountDao implements AccountDao {
         account.setId(rs.getInt("account_id"));
         account.setUsername(rs.getString("username"));
         account.setPassword(rs.getString("password_hash"));
+        account.setStatus(rs.getString("status_"));
         return account;
     }
 
-   public void editAccount(Account acc){
+    @Override
+    public void editAccount(Account acc) throws SQLException {
        String st = "update accounts Set username = ?, password_hash = ? where account_id = ?";
-       try(PreparedStatement statement = connection.prepareStatement(st)){
-           statement.setString(1, acc.getUsername());
-           statement.setString(2, acc.getPassword());
-           statement.setInt(3, acc.getId());
-           //System.out.println(acc.getEmail());
-           statement.executeUpdate();
+       PreparedStatement statement = connection.prepareStatement(st);
+       statement.setString(1, acc.getUsername());
+       statement.setString(2, acc.getPassword());
+       statement.setInt(3, acc.getId());
+       statement.executeUpdate();
 
-       } catch (SQLException e) {
-           throw new RuntimeException(e);
-       }
-   }
+    }
+
+    @Override
+    public void setStatus(int accountId, String status) throws SQLException {
+        String st = "update accounts Set status_ = ? where account_id = ?";
+        PreparedStatement statement = connection.prepareStatement(st);
+        statement.setString(1, status);
+        statement.setInt(2, accountId);
+        statement.executeUpdate();
+    }
 }

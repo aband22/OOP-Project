@@ -140,7 +140,7 @@
             </div>
 
             <div class="text-center mb-4">
-                <a href="" class="btn btn-warning col-2">დაიწყე ქვიზი</a>
+                <a href="question" class="btn btn-warning col-2">დაიწყე ქვიზი</a>
             </div>
         </c:when>
     </c:choose>

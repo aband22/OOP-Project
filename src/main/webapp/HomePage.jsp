@@ -166,7 +166,7 @@
                             <div class="feature-icon d-inline-flex align-items-center justify-content-center text-bg-success bg-gradient fs-2 mb-3">
                                 <img src="photos/clock-history.svg" alt="Logo" width="30" height="30" class="d-inline-block align-text-top">
                             </div>
-                            ბოლოს ნანახი
+                            ბოლოს გაკეთებული
                         </h2>
 
                         <div class="row row-cols-1 row-cols-lg-3 align-items-stretch g-4 py-5">
@@ -227,8 +227,8 @@
                                     </div>
                                 </div>
                             </a>
-                        </div>
                         <% } %>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -294,8 +294,8 @@
                             </div>
                         </div>
                     </a>
-                </div>
                 <% } %>
+                </div>
             </div>
         </div>
     </div>
@@ -359,8 +359,8 @@
                             </div>
                         </div>
                     </a>
-                </div>
                 <% } %>
+                </div>
             </div>
         </div>
     </div>

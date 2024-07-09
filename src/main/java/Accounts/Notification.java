@@ -9,7 +9,7 @@ public class Notification{
     public static final String CHALLENGE = "გამოწვევა";
     public static final String NEWS = "ახალი ქვიზი";
     public static final String FRIEND_RESULT = "მეგობრის ახალი შედეგი";
-    public static final String FRIEND_ACHIEVEMENT = "მეგობრის ახალი მიღწევა";
+    public static final String FRIEND_ACHIEVEMENT = "მეგობრის მიღწევა";
     public static final String ACHIEVEMENT = "მიღწევა";
 
 
@@ -26,6 +26,7 @@ public class Notification{
     private String type;
     private String text;
     private int quizId;
+    private int achievementId;
     public Notification(int acc_id, int acc_from_id, String type, String text){
         this.acc_id = acc_id;
         this.acc_from_id = acc_from_id;
@@ -61,6 +62,14 @@ public class Notification{
 
     public int getQuizId() {
         return quizId;
+    }
+
+    public int getAchievementId() {
+        return achievementId;
+    }
+
+    public void setAchievementId(int achievementId) {
+        this.achievementId = achievementId;
     }
 
     public void setQuizId(int quizId) {

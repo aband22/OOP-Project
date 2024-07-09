@@ -1,7 +1,6 @@
 package Servlets;
 
-import Accounts.Account;
-import Accounts.SqlAccountDao;
+import Accounts.*;
 import Quizzes.*;
 
 import javax.servlet.ServletException;
@@ -202,7 +201,41 @@ public class CreateQuizServlet extends HttpServlet {
             return;
         }
 
-        request.getRequestDispatcher("CreateQuiz.jsp").forward(request, response);
+        SqlAccountInfoDao accInfo = (SqlAccountInfoDao) getServletContext().getAttribute("accountInfo_db");
+        int num;
+        try {
+            num = accInfo.getCreatedQuizzes(acc.getId()).size();
+        } catch (SQLException e) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+
+        Achievement achievement = null;
+        if(num == 1){
+            achievement = new Achievement(acc.getId(), Achievement.CREATED_1);
+        }else if(num == 5){
+            achievement = new Achievement(acc.getId(), Achievement.CREATED_5);
+        }else if(num == 10){
+            achievement = new Achievement(acc.getId(), Achievement.CREATED_10);
+        }else if(num == 50){
+            achievement = new Achievement(acc.getId(), Achievement.CREATED_50);
+        }else if(num == 100){
+            achievement = new Achievement(acc.getId(), Achievement.CREATED_100);
+        }
+        if(achievement != null) {
+            SqlAchievementDao achievements = (SqlAchievementDao) request.getServletContext().getAttribute("achievements_db");
+            try {
+                achievements.addAchievement(achievement);
+            } catch (SQLException e) {
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
+            }
+
+
+        }
+
+
+        response.sendRedirect("user?user=" + acc.getId());
     }
 
 }

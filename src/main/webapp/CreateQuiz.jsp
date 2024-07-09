@@ -102,7 +102,7 @@
             <label style="padding-bottom: 30px" id="drop-area" for="input-file">
                 <input type="file" accept="image/*" id="input-file" name="quizPhoto" hidden>
                 <div id="img-view">
-                    <img src="icon.png">
+                    <img src="photos/icon.png">
                     <p>Drag and drop or click here<br>to upload image</p>
                     <span>Upload any images from desktop</span>
                 </div>

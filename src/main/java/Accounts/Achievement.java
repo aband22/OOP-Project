@@ -7,22 +7,19 @@ public class Achievement {
     String type;
     String text;
     public static final int NO_ID = -1;
-    public static final String CREATED1 = "შექმენით ერთი ქვიზი";
-    public static final String CREATED5 = "შექმენით ხუთი ქვიზი";
+    public static final String CREATED_1 = "შექმენით ერთი ქვიზი";
+    public static final String CREATED_5 = "შექმენით ხუთი ქვიზი";
+    public static final String CREATED_10 = "შექმენით ათი ქვიზი";
+    public static final String CREATED_50 = "შექმენით ორმოცდაათი ქვიზი";
+    public static final String CREATED_100 = "შექმენით ასი ქვიზი";
 
-    public static final String CREATED10 = "შექმენით ათი ქვიზი";
-    public static final String CREATED50 = "შექმენით ორმოცდაათი ქვიზი";
-    public static final String CREATED100 = "შექმენით ასი ქვიზი";
+    public static final String COMPLETED_1 = "შეასრულეთ ერთი ქვიზი";
+    public static final String COMPLETED_5 = "შეასრულეთ ხუთი ქვიზი";
+    public static final String COMPLETED_10 = "შეასრულეთ ათი ქვიზი";
+    public static final String COMPLETED_50 = "შეასრულეთ ორმოცდაათი ქვიზი";
+    public static final String COMPLETED_100 = "შეასრულეთ ასი ქვიზი";
 
-    public static final String COMPLETED1 = "შეასრულეთ ერთი ქვიზი";
-    public static final String COMPLETED5 = "შეასრულეთ ხუთი ქვიზი";
-
-    public static final String COMPLETED10 = "შეასრულეთ ათი ქვიზი";
-
-    public static final String COMPLETED50 = "შეასრულეთ ორმოცდაათი ქვიზი";
-    public static final String COMPLETED100 = "შეასრულეთ ასი ქვიზი";
-
-    public static final String CHALLANGEWON = "გამოგიწვიათ მეგობარმა და მოიგეთ";
+    public static final String CHALLENGE_WON = "გამოგიწვიათ მეგობარმა და მოიგეთ";
 
     public static final String TOP1 = "გახვედით პირველ ადგილზე";
     public static final String TOP2 = "გახვედით მეორე ადგილზე";
