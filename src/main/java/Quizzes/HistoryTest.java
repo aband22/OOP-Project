@@ -59,7 +59,7 @@ public class HistoryTest {
             public Quiz getQuizById(int id) throws SQLException {
                 return null;
             }
-        }
+        };
         clearData();
     }
 
