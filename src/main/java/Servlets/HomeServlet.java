@@ -39,6 +39,7 @@ public class HomeServlet extends HttpServlet {
             List<String> colors = new ArrayList<>();
             Collections.addAll(colors,"dark", "info", "warning", "danger", "success", "secondary", "primary");
             request.getServletContext().setAttribute("colors", colors);
+            request.setAttribute("curUser", request.getSession().getAttribute("curUser"));
             request.getRequestDispatcher("/HomePage.jsp").forward(request, response);
             return;
         }

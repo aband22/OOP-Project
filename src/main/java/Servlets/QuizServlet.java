@@ -82,7 +82,7 @@ public class QuizServlet extends HttpServlet {
 
         request.setAttribute("friends", friends);
         request.setAttribute("topScorers", scorers);
-
+        request.setAttribute("curUser", request.getSession().getAttribute("curUser"));
         request.getRequestDispatcher("/QuizPage.jsp").forward(request, response);
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)

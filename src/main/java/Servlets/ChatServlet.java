@@ -20,7 +20,13 @@ public class ChatServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws ServletException, IOException {
         HttpSession session = httpServletRequest.getSession();
-        int curUserId = Integer.parseInt((String) session.getAttribute("curUser"));
+        String user = (String) httpServletRequest.getSession().getAttribute("curUser");
+        int curUserId = 0;
+        if(user != null)  curUserId = Integer.parseInt(user);
+        else {
+            httpServletRequest.getRequestDispatcher("/ErrorPage.jsp").forward(httpServletRequest, httpServletResponse);
+            return;
+        }
         SqlAccountInfoDao accInfo = (SqlAccountInfoDao) getServletContext().getAttribute("accountInfo_db");
         SqlAccountDao accs = (SqlAccountDao) getServletContext().getAttribute("accounts_db");
         List<Integer> friendsIds = null;

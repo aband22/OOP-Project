@@ -103,7 +103,7 @@
                 <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quiz=<%=quizId%>">
                   <div class="row g-0">
                     <div class="col-md-4">
-                      <img src="<%=photo%>" class="img-fluid rounded-start" alt="...">
+                      <img src="photos/<%=photo%>" class="img-fluid rounded-start" alt="...">
                     </div>
                     <div class="col-md-8">
                       <div class="card-body">

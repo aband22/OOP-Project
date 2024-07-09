@@ -2,6 +2,7 @@
 <%@ page import="Accounts.Account" %>
 <%@ page import="java.util.List" %>
 <%@ page import="Quizzes.SqlQuizzesHistoryDao" %>
+<%@ page import="Accounts.SqlAccountDao" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jstl/core_rt" %>
 
@@ -87,31 +88,33 @@
     </nav>
 </div>
 <div>
-
-    <h2 class="page-header"><b><%=((Quiz) application.getAttribute("quiz")).getTitle()%></b></h2>
+    <h2 class="page-header"><b><%=((Quiz) request.getAttribute("quiz")).getTitle()%></b></h2>
 
     <div class="list-group" style="margin-right: 700px; padding: 50px; margin-left: 80px;">
-        <a href="home?category=<%=((Quiz) application.getAttribute("quiz")).getCategory()%>" class="list-group-item list-group-item-action list-group-item-secondary"> Category: ${quiz.Category}</a>
-        <a href="user?user=<%=((Quiz) application.getAttribute("quiz")).getAccount().getId()%>" class="list-group-item list-group-item-action list-group-item-secondary"> ID: ${quiz.AccountId}</a>
-        <li class="list-group-item list-group-item-secondary"> Creation Date: <%=((Quiz) application.getAttribute("quiz")).getCreationDate().toString()%></li>
-        <c:choose>
-            <c:when test="${curUser != null}">
+        <%  SqlAccountDao accs = (SqlAccountDao)application.getAttribute("accounts_db");
+            String username = accs.getAccountById(((Quiz) request.getAttribute("quiz")).getAccount().getId()).getUsername();%>
+        <a href="home?category=<%=((Quiz) request.getAttribute("quiz")).getCategory()%>" class="list-group-item list-group-item-action list-group-item-secondary"> კატეგორია: <%=((Quiz) request.getAttribute("quiz")).getCategory()%></a>
+        <a href="user?user=<%=((Quiz) request.getAttribute("quiz")).getAccount().getId()%>" class="list-group-item list-group-item-action list-group-item-secondary"> სახელი: <%=username%></a>
+        <li class="list-group-item list-group-item-secondary"> Creation Date: <%=((Quiz) request.getAttribute("quiz")).getCreationDate().toString()%></li>
+        <%  SqlQuizzesHistoryDao history = (SqlQuizzesHistoryDao) application.getAttribute("quizzesHistory_db");;
+            int quizId = 0;
+            if(request.getAttribute("curUser") != null){%>
                 <%
-                    SqlQuizzesHistoryDao history = (SqlQuizzesHistoryDao) application.getAttribute("quizzesHistory_db");
-                    int quizId = ((Quiz) application.getAttribute("quiz")).getId();
-                    int accId = Integer.parseInt((String)application.getAttribute("curUser"));
+                    quizId = ((Quiz) request.getAttribute("quiz")).getId();
+                    int accId = Integer.parseInt((String)request.getAttribute("curUser"));
                     boolean hasDone = history.hasDoneQuiz(quizId, accId);
-                    int quizPoint = ((Quiz) application.getAttribute("quiz")).getPoints();
+                    int quizPoint = ((Quiz) request.getAttribute("quiz")).getPoints();
                     int score = 0;
                     if(hasDone){
                         score = history.getScore(quizId, accId);
                     }
                 %>
-                <c:when test="<%=hasDone%>">
-                    <li class="list-group-item list-group-item-secondary"> My Result: <%=score%> / <%=quizPoint%></li>
-                </c:when>
-            </c:when>
-        </c:choose>
+                <c:choose>
+                    <c:when test="<%=hasDone%>">
+                        <li class="list-group-item list-group-item-secondary"> My Result: <%=score%> / <%=quizPoint%></li>
+                    </c:when>
+                </c:choose>
+        <%}%>
     </div>
 
     <c:choose>
@@ -122,13 +125,13 @@
                 </button>
                 <ul class="dropdown-menu">
                     <%
-                        List<Account> friends = (List<Account>) application.getAttribute("friends");
+                        List<Account> friends = (List<Account>) request.getAttribute("friends");
                         for (int i = 0; i < friends.size(); i++) {
                             Account acc = friends.get(i);
                             String name = acc.getUsername();
                             int friendId = acc.getId();
                     %>
-                    <form action="quiz?quizId=<%=quizId%>&friendId=<%=friendId%>" method="post" id="challengeButton">
+                    <form action="quiz?quiz=<%=quizId%>&friendId=<%=friendId%>" method="post" id="challengeButton">
                         <input type="hidden" id="challenge" name="challenge">
                         <button type="submit" class="dropdown-item" onclick="setAttributeAndSubmit('challenge')"><%=name%></button>
                     </form>
@@ -155,11 +158,11 @@
             </tr>
             </thead>
             <%
-                List<Account> topScorers = (List<Account>) application.getAttribute("topScorers");
+                List<Account> topScorers = (List<Account>) request.getAttribute("topScorers");
                 for (int i = 0; i < topScorers.size(); i++) {
                       int accID = topScorers.get(i).getId();
                       String accName = topScorers.get(i).getUsername();
-                      score = history.getScore(quizId, accID);
+                      int score = history.getScore(quizId, accID);
             %>
             <tbody>
             <tr>
