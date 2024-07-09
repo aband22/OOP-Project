@@ -19,7 +19,6 @@ import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +31,6 @@ public class UserPageServlet extends HttpServlet {
             throws ServletException, IOException {
         String user = request.getParameter("user");
         if(user == null) {
-            System.out.println("null");
             request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
             return;
         }
@@ -53,9 +51,8 @@ public class UserPageServlet extends HttpServlet {
         List<Integer> friendsId;
         Account account;
         try {
-            account = accountStore.GetAccountById(userId);
+            account = accountStore.getAccountById(userId);
         } catch (SQLException e) {
-            System.out.println("account null");
             request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
             return;
         }
@@ -63,26 +60,20 @@ public class UserPageServlet extends HttpServlet {
         try {
             myQuizzes = accInfo.getCreatedQuizzes(userId);
         } catch (SQLException e) {
-            System.out.println("myQuizzes null");
-
             request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
             return;
         }
         try {
             friendsId = accInfo.getAllFriendsId(userId);
         } catch (SQLException e) {
-            System.out.println("friendsId null");
-
             request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
             return;
         }
         List<Account> friends = new ArrayList<>();
         for (Integer integer : friendsId) {
             try {
-                friends.add(accountStore.GetAccountById(integer));
+                friends.add(accountStore.getAccountById(integer));
             } catch (SQLException e) {
-                System.out.println("friendsList null");
-
                 request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
                 return;
             }
@@ -92,18 +83,14 @@ public class UserPageServlet extends HttpServlet {
         try {
             achievements = achievementStore.getAll(userId);
         } catch (SQLException e) {
-            System.out.println("achievements null");
-
             request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
             return;
         }
 
-        List<Integer> quizzesIds = null;
+        List<Integer> quizzesIds = new ArrayList<>();
         try {
             quizzesIds = quizzesInfo.getDoneQuizzesId(userId);
         } catch (SQLException e) {
-            System.out.println("quizzesIds null");
-
             request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
             return;
         }
@@ -112,8 +99,6 @@ public class UserPageServlet extends HttpServlet {
             try {
                 quizzes.add(quizStore.getQuizById(integer));
             } catch (SQLException e) {
-                System.out.println("quizzesIds1111 null");
-
                 request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
                 return;
             }
@@ -131,8 +116,6 @@ public class UserPageServlet extends HttpServlet {
         try {
             if(accInfo.isFriend(curUserId, userId)) isFriend = 1;
         } catch (SQLException e) {
-            System.out.println("quizzesIds22 null");
-
             request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
             return;
         }
@@ -152,8 +135,6 @@ public class UserPageServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String user = request.getParameter("user");
         if(user == null) {
-            System.out.println("userrr null");
-
             request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
             return;
         }
@@ -183,7 +164,8 @@ public class UserPageServlet extends HttpServlet {
             try {
                 notificationsInfo.remove(notification);
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
             }
 
             //request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
@@ -194,7 +176,8 @@ public class UserPageServlet extends HttpServlet {
             try {
                 accInfo.removeFriend(curUserId, userId);
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+                return;
             }
             response.sendRedirect("user?user=" + userId);
             return;
@@ -205,9 +188,10 @@ public class UserPageServlet extends HttpServlet {
         SqlAccountDao dao = (SqlAccountDao) request.getServletContext().getAttribute("accounts_db");
         String pass;
         try {
-            pass = dao.GetAccountById(accountId).getPassword();
+            pass = dao.getAccountById(accountId).getPassword();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
         String errorMessage = null;
 
@@ -215,7 +199,7 @@ public class UserPageServlet extends HttpServlet {
         SqlAccountDao accountStore = (SqlAccountDao) getServletContext().getAttribute("accounts_db");
 
         try {
-            Account acc = accountStore.GetAccountById(accountId);
+            Account acc = accountStore.getAccountById(accountId);
 
             acc.setUsername(newUsername);
             //acc.setEmail(newEmail);
@@ -246,17 +230,19 @@ public class UserPageServlet extends HttpServlet {
             accountStore.editAccount(acc);
         } catch (NoSuchAlgorithmException | SQLException e) {
             errorMessage = "დაფიქსირდა შეცდომა: " + e.getMessage();
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
 
         try {
-            request.setAttribute("account", accountStore.GetAccountById(accountId));
+            request.setAttribute("account", accountStore.getAccountById(accountId));
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
         }
         request.setAttribute("errorMessage", errorMessage);
         request.setAttribute("curUserId", curUserId);
         request.setAttribute("userId", userId);
-        //request.getSession().setAttribute("curUser",user);
         request.getRequestDispatcher("/UserPage.jsp").forward(request, response);
     }
 }

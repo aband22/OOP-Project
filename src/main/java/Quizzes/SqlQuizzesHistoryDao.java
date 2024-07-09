@@ -2,7 +2,6 @@ package Quizzes;
 
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class SqlQuizzesHistoryDao implements QuizzesHistoryDao{
@@ -29,6 +28,7 @@ public class SqlQuizzesHistoryDao implements QuizzesHistoryDao{
         ResultSet rs = statement.executeQuery(
                 "SELECT count(*) FROM quizzesHistory Where account_id = " + '"' + accountId + '"' + "ORDER BY done_date DESC"
         );
+        rs.next();
         int num = rs.getInt(1);
         return getDoneQuizzesId(accountId, num);
     }
@@ -36,7 +36,7 @@ public class SqlQuizzesHistoryDao implements QuizzesHistoryDao{
         List<Integer> quizIds = new ArrayList<Integer>();
         Statement statement = connection.createStatement();
         ResultSet rs = statement.executeQuery(
-                "SELECT * FROM quizzesHistory Where account_id = " + '"' + accountId + '"' + "ORDER BY done_date DESC" + "Limit" + num
+                "SELECT * FROM quizzesHistory Where account_id = " + '"' + accountId + '"' + "ORDER BY done_date DESC" + " Limit " + num
         );
         while (rs.next()) {
             quizIds.add(rs.getInt("quiz_id"));

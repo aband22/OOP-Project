@@ -11,5 +11,5 @@ public interface AccountDao {
     int getUserID(String email) throws SQLException;
     boolean emailExist(String email) throws SQLException;
     String getNameById(int accountId)  throws SQLException;
-    Account GetAccountById(int accountId) throws SQLException;
+    Account getAccountById(int accountId) throws SQLException;
 }

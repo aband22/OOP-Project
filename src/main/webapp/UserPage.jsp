@@ -18,7 +18,7 @@
     <title>User Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="userPageStyle.css">
+    <link rel="stylesheet" href="UserPageStyle.css">
 </head>
 <body>
 <div class="home">
@@ -110,6 +110,7 @@
                 SqlQuizzesHistoryDao quizzesInfo = (SqlQuizzesHistoryDao)application.getAttribute("quizzesHistory_db");
                 for(int i = 0; i < quizzes.size(); i++){
                     Quiz quiz = quizzes.get(i);
+                    String photo = quiz.getQuizPhoto();
                     int quizId = quiz.getId();
                     String name = quiz.getTitle();
                     String category = quiz.getCategory();
@@ -142,7 +143,7 @@
                 <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quizID=<%=quizId%>">
                     <div class="row g-0">
                         <div class="col-md-4">
-                            <img src="..." class="img-fluid rounded-start" alt="...">
+                            <img src="<%=photo%>" class="img-fluid rounded-start" alt="...">
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
@@ -174,7 +175,7 @@
             <a class="card ragaca" style="max-width: 840px; border: white;" href="user?user=<%=friendId%>">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="<%=friendId%>.jpg" class="img-fluid" alt="Photo" width="50" height="50">
+                        <img src="photos/<%=friendId%>.png" class="img-fluid" alt="Photo" width="50" height="50">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -213,6 +214,7 @@
                 List<Quiz> myQuizzes = (List<Quiz>) application.getAttribute("quizzes");
                 for(int i = 0; i < myQuizzes.size(); i++) {
                     Quiz quiz = myQuizzes.get(i);
+                    String photo = quiz.getQuizPhoto();
                     int quizId = quiz.getId();
                     String quizCategory = quiz.getCategory();
                     String quizTitle = quiz.getTitle();
@@ -242,7 +244,7 @@
             <a class="card mb-3" style="max-width: 840px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quiz=<%=quizId%>">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="<%=quizId%>.png" class="img-fluid rounded-start" alt="...">
+                        <img src="<%=photo%>" class="img-fluid rounded-start" alt="...">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
@@ -295,26 +297,6 @@
 <%--    </a>--%>
 
 </div>
-<script>
-    function showContent(section) {
-        var contents = document.querySelectorAll('.content');
-        contents.forEach(function(content) {
-            content.classList.remove('active');
-        });
-        document.getElementById(section).classList.add('active');
-        if (section === 'edit') {
-            document.getElementById('usernameEdit').value = document.getElementById('displayUsername').innerText;
-        }
-    }
-    function save() {
-        document.getElementById('displayUsername').innerText = document.getElementById('usernameEdit').value;
-        showContent('info');
-    }
-    function setAttributeAndSubmit(attribute) {
-        var attributeValue = attribute;
-        document.getElementById(attribute).value = attributeValue;
-        document.getElementById("friendStatus").submit();
-    }
-</script>
+<script src="UserPageScript.js"></script>
 </body>
 </html>

@@ -94,7 +94,7 @@ public class SqlAccountDao implements AccountDao {
     }
 
     @Override
-    public Account GetAccountById(int accountId) throws SQLException {
+    public Account getAccountById(int accountId) throws SQLException {
         String acc = "select * from accounts where account_id = ?";
         PreparedStatement statement = connection.prepareStatement(acc);
         statement.setInt(1,accountId);

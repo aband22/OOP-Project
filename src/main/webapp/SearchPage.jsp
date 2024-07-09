@@ -69,6 +69,7 @@
               <% List<Quiz> quizzes = (List)application.getAttribute("quizzes");
                  for(int i = 0; i < quizzes.size(); i++){
                     Quiz quiz = quizzes.get(i);
+                    String photo = quiz.getQuizPhoto();
                     int quizId = quiz.getId();
                     String name = quiz.getTitle();
                     String category = quiz.getCategory();
@@ -99,7 +100,7 @@
                 <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quizID=<%=quizId%>">
                   <div class="row g-0">
                     <div class="col-md-4">
-                      <img src="..." class="img-fluid rounded-start" alt="...">
+                      <img src="<%=photo%>" class="img-fluid rounded-start" alt="...">
                     </div>
                     <div class="col-md-8">
                       <div class="card-body">

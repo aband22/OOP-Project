@@ -81,7 +81,7 @@
           <div class="card mb-9 btn" style="max-width: 540px; border: white;">
             <div class="row g-0">
               <div class="col-md-4">
-                <img src="<%=from_id%>.png" class="img-fluid" alt="Photo" width="115" height="115">
+                <img src="photos/<%=from_id%>.png" class="img-fluid" alt="Photo" width="115" height="115">
               </div>
               <div class="col-md-8">
                 <div class="card-body">
