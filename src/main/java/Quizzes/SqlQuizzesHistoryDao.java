@@ -14,7 +14,7 @@ public class SqlQuizzesHistoryDao implements QuizzesHistoryDao{
     @Override
     public void add(int quizId, int accountId, int score) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO accounts (quiz_id, account_id, score, done_date) " + "VALUES (?, ?, ?, SYSDATE());",
+                "INSERT INTO quizzesHistory (quiz_id, account_id, score, done_date) " + "VALUES (?, ?, ?, SYSDATE());",
                 Statement.RETURN_GENERATED_KEYS);
         statement.setInt(1, quizId);
         statement.setInt(2, accountId);
