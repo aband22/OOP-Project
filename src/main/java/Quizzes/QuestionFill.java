@@ -1,6 +1,7 @@
 package Quizzes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class QuestionFill implements Question{
@@ -43,10 +44,6 @@ public class QuestionFill implements Question{
         return photo;
     }
 
-    @Override
-    public void setAnswerPhotos(ArrayList<String> answerPhotos) {
-
-    }
 
     @Override
     public void setAnswers(List<String> answers) {

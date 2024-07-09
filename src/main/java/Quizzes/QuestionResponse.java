@@ -7,6 +7,7 @@ public class QuestionResponse implements Question{
     List<String> answers;
     String question;
     private String photo;
+    List<String> answersPhoto;
 
     public QuestionResponse(String question, List<String> answers){
         this.question = question;
@@ -34,10 +35,6 @@ public class QuestionResponse implements Question{
         return photo;
     }
 
-    @Override
-    public void setAnswerPhotos(ArrayList<String> answerPhotos) {
-
-    }
 
     @Override
     public String getQuestionType() {

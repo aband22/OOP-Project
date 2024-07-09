@@ -12,11 +12,12 @@ public class SqlAccountDao implements AccountDao {
     @Override
     public void add(Account acc) throws SQLException {
         PreparedStatement statement = connection.prepareStatement(
-                "INSERT INTO accounts (email_address, username, password_hash) " + "VALUES (?, ?, ?);",
+                "INSERT INTO accounts (email_address, username, password_hash, status_) " + "VALUES (?, ?, ?, ?);",
                 Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, acc.getEmail());
         statement.setString(2, acc.getUsername());
         statement.setString(3, acc.getPassword());
+        statement.setString(4, "Amateur");
         statement.executeUpdate();
 
         ResultSet rs = statement.getGeneratedKeys();

@@ -155,7 +155,7 @@ public class CreateQuizServlet extends HttpServlet {
                     break;
                 case "multipleChoice":
                     question = new QuestionMultipleChoice(questionText, choices, answers);
-                    question.setAnswerPhotos(answerPhotos);
+                    ((QuestionMultipleChoice) question).setAnswerPhotos(answerPhotos);
                     break;
                 case "response":
                     question = new QuestionResponse(questionText, answers);

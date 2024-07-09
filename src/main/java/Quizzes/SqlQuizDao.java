@@ -132,6 +132,7 @@ public class SqlQuizDao implements QuizDao {
         curr.setCreationDate(rs.getTimestamp("quiz_creation_date"));
         curr.setTimer(rs.getString("quiz_timer"));
         curr.setNumCompleted(rs.getInt("num_completed"));
+        curr.setQuizPhoto("quiz_points");
 
         Account curAccount = new Account();
         int accountId = rs.getInt("account_id");
@@ -167,17 +168,27 @@ public class SqlQuizDao implements QuizDao {
 
             if(Objects.equals(type, "Response")){
                 List<String> answers = getQuestionAnswers(rs.getInt("question_id"),false);
-                quests.add(new QuestionResponse(rs.getString("question_text"), answers));
+                Question question=new QuestionResponse(rs.getString("question_text"), answers);
+                question.setPhotoPath(rs.getString("question_photo"));
+                quests.add(question);
             } else if (Objects.equals(type, "Fill")) {
                 List<String> answers = getQuestionAnswers(rs.getInt("question_id"), false);
-                quests.add(new QuestionFill(rs.getString("question_text"), answers));
+                Question question=new QuestionFill(rs.getString("question_text"), answers);
+                question.setPhotoPath(rs.getString("question_photo"));
+                quests.add(question);
             }else if (Objects.equals(type, "MultipleResponse")) {
                 List<String> answers = getQuestionAnswers(rs.getInt("question_id"), false);
-                quests.add(new QuestionMultipleResp(rs.getString("question_text"), answers));
+                Question question=new QuestionMultipleResp(rs.getString("question_text"), answers);
+                question.setPhotoPath(rs.getString("question_photo"));
+                quests.add(question);
             }else if (Objects.equals(type, "MultipleChoice")) {
                 List<String> answers = getQuestionAnswers(rs.getInt("question_id"), true);
                 List<String> choices = getQuestionAnswers(rs.getInt("question_id"), false);
-                quests.add(new QuestionMultipleChoice(rs.getString("question_text"), choices, answers));
+                List<String> answersPhotos = getQuestionAnswersPhotos(rs.getInt("question_id"));
+                QuestionMultipleChoice question=new QuestionMultipleChoice(rs.getString("question_text"),choices, answers);
+                question.setPhotoPath(rs.getString("question_photo"));
+                question.setAnswerPhotos(answersPhotos);
+                quests.add(question);
             }
 
         }
@@ -204,6 +215,26 @@ public class SqlQuizDao implements QuizDao {
             }
         }
         return answers;
+    }
+
+    private List<String> getQuestionAnswersPhotos(int questionId) throws SQLException {
+        if (questionId <= 0) {
+            throw new IllegalArgumentException("Invalid question ID.");
+        }
+
+        String query = "SELECT answer_photo FROM answer WHERE question_id = ?";
+        List<String> photos = new ArrayList<>();
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, questionId);
+            try (ResultSet rs = statement.executeQuery()) {
+                while (rs.next()) {
+                    photos.add(rs.getString("answer_photo"));
+
+                }
+            }
+        }
+        return photos;
     }
 
     @Override

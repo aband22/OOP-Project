@@ -45,13 +45,16 @@ public class QuestionMultipleChoice implements Question{
         return photo;
     }
 
-    @Override
-    public void setAnswerPhotos(ArrayList<String> answerPhotos) {
+
+    public void setAnswerPhotos(List<String> answerPhotos) {
         this.answerPhotos = answerPhotos;
     }
 
-    @Override
+    public List<String> getAnswerPhotos(){
+        return answerPhotos;
+    }
 
+    @Override
     public void setAnswers(List<String> answers) {
         this.answers = answers;
     }
@@ -64,9 +67,7 @@ public class QuestionMultipleChoice implements Question{
     public void setChoices(List<String> choices){
         this.choices = choices;
     }
-    List<String> getAnswerPhotos(){
-        return answerPhotos;
-    }
+
 
 
 }
