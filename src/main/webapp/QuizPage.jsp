@@ -95,7 +95,7 @@
             String username = accs.getAccountById(((Quiz) request.getAttribute("quiz")).getAccount().getId()).getUsername();%>
         <a href="home?category=<%=((Quiz) request.getAttribute("quiz")).getCategory()%>" class="list-group-item list-group-item-action list-group-item-secondary"> კატეგორია: <%=((Quiz) request.getAttribute("quiz")).getCategory()%></a>
         <a href="user?user=<%=((Quiz) request.getAttribute("quiz")).getAccount().getId()%>" class="list-group-item list-group-item-action list-group-item-secondary"> სახელი: <%=username%></a>
-        <li class="list-group-item list-group-item-secondary"> Creation Date: <%=((Quiz) request.getAttribute("quiz")).getCreationDate().toString()%></li>
+        <li class="list-group-item list-group-item-secondary"> შექმნის თარიღი: <%=((Quiz) request.getAttribute("quiz")).getCreationDate().toString()%></li>
         <%  SqlQuizzesHistoryDao history = (SqlQuizzesHistoryDao) application.getAttribute("quizzesHistory_db");;
             int quizId = 0;
             if(request.getAttribute("curUser") != null){%>
@@ -111,7 +111,7 @@
                 %>
                 <c:choose>
                     <c:when test="<%=hasDone%>">
-                        <li class="list-group-item list-group-item-secondary"> My Result: <%=score%> / <%=quizPoint%></li>
+                        <li class="list-group-item list-group-item-secondary"> ჩემი შედეგი: <%=score%> / <%=quizPoint%></li>
                     </c:when>
                 </c:choose>
         <%}%>
@@ -140,7 +140,7 @@
             </div>
 
             <div class="text-center mb-4">
-                <a href="question" class="btn btn-warning col-2">დაიწყე ქვიზი</a>
+                <a href="question?quizId=<%=((Quiz) request.getAttribute("quiz")).getId()%>" class="btn btn-warning col-2">დაიწყე ქვიზი</a>
             </div>
         </c:when>
     </c:choose>
@@ -159,10 +159,14 @@
             </thead>
             <%
                 List<Account> topScorers = (List<Account>) request.getAttribute("topScorers");
+                System.out.println(topScorers.size());
                 for (int i = 0; i < topScorers.size(); i++) {
                       int accID = topScorers.get(i).getId();
+                      System.out.print(accID);
                       String accName = topScorers.get(i).getUsername();
+                      System.out.println(accName);
                       int score = history.getScore(quizId, accID);
+                      System.out.print(score);
             %>
             <tbody>
             <tr>

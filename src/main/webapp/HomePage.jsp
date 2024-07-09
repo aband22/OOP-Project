@@ -210,18 +210,18 @@
                             <a class="col" href="quiz?quiz=<%=quizId%>">
                                 <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('photos/<%=photo%>');">
                                     <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                                        <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><%=name%></h3>
+                                        <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" style="color: black"><%=name%></h3>
                                         <ul class="d-flex list-unstyled mt-auto">
                                             <li class="me-auto">
                                                 <img src="photos/<%=owner%>.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
                                             </li>
                                             <li class="d-flex align-items-center me-3">
                                                 <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
-                                                <small><%=category%></small>
+                                                <small style="color: black"><%=category%></small>
                                             </li>
                                             <li class="d-flex align-items-center">
                                                 <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
-                                                <small><%=duration%><%=timeText%></small>
+                                                <small style="color: black"><%=duration%><%=timeText%></small>
                                             </li>
                                         </ul>
                                     </div>
@@ -277,18 +277,18 @@
                     <a class="col" href="quiz?quiz=<%=quizId%>">
                         <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('photos/<%=photo%>');">
                             <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><%=name%></h3>
+                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" style="color: black"><%=name%></h3>
                                     <ul class="d-flex list-unstyled mt-auto">
                                     <li class="me-auto">
                                         <img src="photos/<%=owner%>.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
                                     </li>
                                     <li class="d-flex align-items-center me-3">
                                         <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
-                                        <small><%=category%></small>
+                                        <small style="color: black"><%=category%></small>
                                     </li>
                                     <li class="d-flex align-items-center">
                                         <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
-                                        <small><%=duration%><%=timeText%></small>
+                                        <small style="color: black"><%=duration%><%=timeText%></small>
                                     </li>
                                     </ul>
                             </div>
@@ -342,18 +342,18 @@
                     <a class="col" href="quiz?quiz=<%=quizId%>">
                         <div class="card card-cover h-100 overflow-hidden text-bg-dark rounded-4 shadow-lg" style="background-image: url('photos/<%=photo%>');">
                             <div class="d-flex flex-column h-100 p-5 pb-3 text-white text-shadow-1">
-                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold"><%=name%></h3>
+                                    <h3 class="pt-5 mt-5 mb-4 display-6 lh-1 fw-bold" style="color: black"><%=name%></h3>
                                     <ul class="d-flex list-unstyled mt-auto">
                                     <li class="me-auto">
                                         <img src="photos/<%=owner%>.png" alt="Bootstrap" width="32" height="32" class="rounded-circle border border-white">
                                     </li>
                                     <li class="d-flex align-items-center me-3">
                                         <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#geo-fill"></use></svg>
-                                        <small><%=category%></small>
+                                        <small style="color: black"><%=category%></small>
                                     </li>
                                     <li class="d-flex align-items-center">
                                         <svg class="bi me-2" width="1em" height="1em"><use xlink:href="#calendar3"></use></svg>
-                                        <small><%=duration%><%=timeText%></small>
+                                        <small style="color: black"><%=duration%><%=timeText%></small>
                                     </li>
                                     </ul>
                             </div>

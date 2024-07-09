@@ -44,9 +44,16 @@ public class QuestionFill implements Question{
         return photo;
     }
 
-
     @Override
     public void setAnswers(List<String> answers) {
         this.answers = answers;
+    }
+
+    public String getProcessedQuestion() {
+        String processedQuestion = this.getQuestion();
+        for (String answer : answers) {
+            processedQuestion = processedQuestion.replace(answer, "__");
+        }
+        return processedQuestion;
     }
 }

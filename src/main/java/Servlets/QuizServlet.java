@@ -87,6 +87,21 @@ public class QuizServlet extends HttpServlet {
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String quizz = request.getParameter("quiz");
+        if (quizz == null) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+        int quizId = Integer.parseInt(quizz);
 
+        SqlQuizzesHistoryDao quizInfo = (SqlQuizzesHistoryDao) request.getServletContext().getAttribute("quizzesHistory_db");
+        try {
+            quizInfo.add(quizId, Integer.parseInt((String)request.getSession().getAttribute("curUser")), 0);
+        } catch (SQLException e) {
+            request.getRequestDispatcher("/ErrorPage.jsp").forward(request, response);
+            return;
+        }
+
+        response.sendRedirect("quiz?quiz=" + quizId);
     }
 }

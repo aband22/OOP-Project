@@ -93,7 +93,6 @@ public class SqlQuizzesHistoryDao implements QuizzesHistoryDao{
         ResultSet rs = statement.executeQuery(
                 "SELECT * FROM quizzesHistory Where quiz_id = " + '"' + quizId + '"' + "AND account_id = " + '"' + accountId + '"'
         );
-        rs.next();
         return  rs.next();
     }
 }

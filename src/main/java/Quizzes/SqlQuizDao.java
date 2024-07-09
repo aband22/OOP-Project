@@ -133,6 +133,7 @@ public class SqlQuizDao implements QuizDao {
         curr.setTimer(rs.getString("quiz_timer"));
         curr.setNumCompleted(rs.getInt("num_completed"));
         curr.setQuizPhoto(rs.getString("quiz_photo"));
+        curr.setPoints(rs.getInt("quiz_points"));
         Account curAccount = new Account();
         int accountId = rs.getInt("account_id");
         int quizId = rs.getInt("quiz_id");
