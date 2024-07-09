@@ -3,6 +3,7 @@ package Servlets;
 import Accounts.Account;
 import Accounts.SqlAccountDao;
 import Accounts.SqlAccountInfoDao;
+import Quizzes.Question;
 import Quizzes.Quiz;
 import Quizzes.SqlQuizDao;
 import Quizzes.SqlQuizzesHistoryDao;
@@ -16,6 +17,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet("/quiz")
 public class QuizServlet extends HttpServlet {
@@ -93,6 +95,46 @@ public class QuizServlet extends HttpServlet {
             return;
         }
         int quizId = Integer.parseInt(quizz);
+
+        SqlQuizDao quizDao = (SqlQuizDao) request.getServletContext().getAttribute("quizzes_db");
+        Quiz quiz;
+        try {
+            quiz = quizDao.getQuizById(quizId);
+        } catch (SQLException e) {
+            throw new ServletException(e);
+        }
+        List<String> answers = new ArrayList<>();
+        List<String> responces = new ArrayList<>();
+
+        List<Question> questions = quiz.getQuestions();
+
+        for (int i = 0; i < questions.size(); i++) {
+            for(int j=0; j < questions.get(i).getAnswers().size(); j++){
+                answers.add(questions.get(i).getAnswers().get(j));
+                //responces.add(req.getParameter("answer"+i+"_"+j));
+                //System.out.println(questions.get(i).getAnswers().get(j));
+                // System.out.println(req.getParameter("answer"+i+"_"+j));
+            }
+
+        }
+        for (int i = 0; i < questions.size(); i++) {
+            for(int j=0; j < questions.get(i).getAnswers().size(); j++){
+                responces.add(request.getParameter("answer"+(i+1)+"_"+(j+1)));
+
+                // System.out.println(req.getParameter("answer"+(i+1)+"_"+(j+1)));
+
+            }
+
+        }
+        int score = 0;
+        System.out.println(request.getParameter("answer2_2"));
+
+        for(int i=0; i<answers.size(); i++){
+            if(responces.get(i)!=null && answers.get(i)!=null && Objects.equals(answers.get(i), responces.get(i))){
+                score++;
+            }
+        }
+
 
         SqlQuizzesHistoryDao quizInfo = (SqlQuizzesHistoryDao) request.getServletContext().getAttribute("quizzesHistory_db");
         try {
