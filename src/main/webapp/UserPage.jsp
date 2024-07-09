@@ -122,19 +122,19 @@
                     String timeText = "წუთის";
                     if(duration > 59){
                         duration = duration / 60;
-                        timeText = "საათის";
-                    }
-                    if(duration > 23){
-                        duration = duration / 24;
-                        timeText = "დღის";
-                    }
-                    if(duration > 30){
-                        duration = duration / 30;
-                        timeText = "თვის";
-                    }
-                    if(duration > 11){
-                        duration = duration / 12;
-                        timeText = "წლის";
+                        timeText = "სთ";
+                        if(duration > 23){
+                            duration = duration / 24;
+                            timeText = "დღ";
+                            if(duration > 30){
+                                duration = duration / 30;
+                                timeText = "თვ";
+                                if(duration > 11){
+                                    duration = duration / 12;
+                                    timeText = "წ";
+                                }
+                            }
+                        }
                     }
 
                     int score = quizzesInfo.getScore(quizId, ((Account) request.getAttribute("account")).getId());
@@ -179,7 +179,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 style="font-weight: bold;"><%=friendName%></h5>
+                            <h5 class="card-text" style="font-weight: bold;"><%=friendName%></h5>
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                 List<Achievement> achievements = (List<Achievement>) application.getAttribute("achievements");
                 for (int i = 0; i < achievements.size(); i++) {
                     String achievementType = achievements.get(i).getType();
-                    String achievementText = achievements.get(i).getText();
+//                    String achievementText = achievements.get(i).getText();
 
             %>
             <div class="card" style="max-width: 840px; border: white;">
@@ -201,8 +201,7 @@
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h6><%=achievementType%></h6>
-                            <h6 class="card-text"><%=achievementText%>></h6>
+                            <h5 class="card-text" style="font-weight: bold;"><%=achievementType%>></h5>
                         </div>
                     </div>
                 </div>
@@ -225,21 +224,20 @@
                     String timeText = "წუთის";
                     if(duration > 59){
                         duration = duration / 60;
-                        timeText = "საათის";
+                        timeText = "სთ";
+                        if(duration > 23){
+                            duration = duration / 24;
+                            timeText = "დღ";
+                            if(duration > 30){
+                                duration = duration / 30;
+                                timeText = "თვ";
+                                if(duration > 11){
+                                    duration = duration / 12;
+                                    timeText = "წ";
+                                }
+                            }
+                        }
                     }
-                    if(duration > 23){
-                        duration = duration / 24;
-                        timeText = "დღის";
-                    }
-                    if(duration > 30){
-                        duration = duration / 30;
-                        timeText = "თვის";
-                    }
-                    if(duration > 11){
-                        duration = duration / 12;
-                        timeText = "წლის";
-                    }
-
             %>
             <a class="card mb-3" style="max-width: 840px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quiz=<%=quizId%>">
                 <div class="row g-0">

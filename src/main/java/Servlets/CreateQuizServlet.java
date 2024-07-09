@@ -48,7 +48,7 @@ public class CreateQuizServlet extends HttpServlet {
         String quizPhoto = null;
         Part filePart2 = request.getPart("quizPhoto");
         if (filePart2 != null && filePart2.getSize() > 0) {
-            System.out.println("yy");
+            //System.out.println("yy");
 
             quizPhoto =  "quiz_"+UUID.randomUUID().toString()+".png";
             String uploadDirr = getServletContext().getRealPath("/") + "photos/";
@@ -117,7 +117,7 @@ public class CreateQuizServlet extends HttpServlet {
 
          if(questionType.equals("multipleChoice")) {
                 Part filePart1 = request.getPart("answerimage" + questionCounter + "_" + answerCounter);
-                System.out.println("answerimage" + questionCounter + "_" + answerCounter);
+                //System.out.println("answerimage" + questionCounter + "_" + answerCounter);
             // System.out.println("answerimage" + 1 + "_" + 1);
              if (filePart1 != null && filePart1.getSize() > 0) {
 
@@ -168,7 +168,7 @@ public class CreateQuizServlet extends HttpServlet {
 
             Part filePart = request.getPart("questionImage"+questionCounter);
             if (filePart != null && filePart.getSize() > 0) {
-                System.out.println("yy");
+                //System.out.println("yy");
 
                 String fileName =  "question_" + questionCounter + "_" + UUID.randomUUID().toString() + ".png";
                 String uploadDirr = getServletContext().getRealPath("/") + "photos/";

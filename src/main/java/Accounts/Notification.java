@@ -17,8 +17,6 @@ public class Notification{
     public static final String CHALLENGE_TEXT = "-მა(მ) გამოგიწვიათ ქვიზში";
     public static final String NEWS_TEXT = "-მა(მ) ახალი ქვიზი შექმნა";
     public static final String FRIEND_RESULT_TEXT = "-მა(მ) დაასრულა ქვიზი, იხილეთ მისი შედეგები";
-    public static final String FRIEND_ACHIEVEMENT_TEXT = "-მა(მ) მიიღო ახალი სტატუსი: ";
-    public static final String ACHIEVEMENT_TEXT = "თქვენ მიიღეთ ახალი სტატუსი: ";
 
 
     private int id;
@@ -27,6 +25,7 @@ public class Notification{
     private Timestamp creationDate;
     private String type;
     private String text;
+    private int quizId;
     public Notification(int acc_id, int acc_from_id, String type, String text){
         this.acc_id = acc_id;
         this.acc_from_id = acc_from_id;
@@ -58,6 +57,14 @@ public class Notification{
 
     public Timestamp getCreationDate() {
         return creationDate;
+    }
+
+    public int getQuizId() {
+        return quizId;
+    }
+
+    public void setQuizId(int quizId) {
+        this.quizId = quizId;
     }
 
     public void setCreationDate(Timestamp creationDate) {

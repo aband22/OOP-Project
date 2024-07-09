@@ -52,7 +52,7 @@ public class SqlQuizDao implements QuizDao {
                 insertQuestionStmt.setString(4,question.getPhotoPath());
                 insertQuestionStmt.executeUpdate();
 
-                System.out.println(question.getPhotoPath());
+                //System.out.println(question.getPhotoPath());
 
                 int questionId;
                 try (ResultSet questionKeys = insertQuestionStmt.getGeneratedKeys()) {
@@ -132,8 +132,7 @@ public class SqlQuizDao implements QuizDao {
         curr.setCreationDate(rs.getTimestamp("quiz_creation_date"));
         curr.setTimer(rs.getString("quiz_timer"));
         curr.setNumCompleted(rs.getInt("num_completed"));
-        curr.setQuizPhoto("quiz_points");
-
+        curr.setQuizPhoto("quiz_photo");
         Account curAccount = new Account();
         int accountId = rs.getInt("account_id");
         int quizId = rs.getInt("quiz_id");
@@ -149,9 +148,9 @@ public class SqlQuizDao implements QuizDao {
         }
         curr.setId(quizId);
         curr.setAccount(curAccount);
-
         List<Question> questions = getQuizQuestions(quizId);
         curr.setQuestions(questions);
+
 //        this.questions = questions != null ? questions : new ArrayList<Question>();
         return curr;
     }
@@ -165,7 +164,6 @@ public class SqlQuizDao implements QuizDao {
         while(rs.next()){
             String type = rs.getString("question_type");
             //Question question = null;
-
             if(Objects.equals(type, "Response")){
                 List<String> answers = getQuestionAnswers(rs.getInt("question_id"),false);
                 Question question=new QuestionResponse(rs.getString("question_text"), answers);
@@ -221,8 +219,7 @@ public class SqlQuizDao implements QuizDao {
         if (questionId <= 0) {
             throw new IllegalArgumentException("Invalid question ID.");
         }
-
-        String query = "SELECT answer_photo FROM answer WHERE question_id = ?";
+        String query = "SELECT answer_photo FROM answers WHERE question_id = ?";
         List<String> photos = new ArrayList<>();
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {

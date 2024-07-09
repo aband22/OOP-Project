@@ -82,22 +82,22 @@
                         long durationInMillis = currentTimeMillis.getTime() - uploadTime.getTime();
                         int duration = (int)durationInMillis / (60 * 1000);
                         String timeText = "წუთის";
-                        if(duration > 59){
-                            duration = duration / 60;
-                            timeText = "საათის";
-                        }
-                        if(duration > 23){
-                            duration = duration / 24;
-                            timeText = "დღის";
-                        }
-                        if(duration > 30){
-                            duration = duration / 30;
-                            timeText = "თვის";
-                        }
-                        if(duration > 11){
-                            duration = duration / 12;
-                            timeText = "წლის";
-                        }
+                         if(duration > 59){
+                             duration = duration / 60;
+                             timeText = "სთ";
+                             if(duration > 23){
+                                 duration = duration / 24;
+                                 timeText = "დღ";
+                                 if(duration > 30){
+                                     duration = duration / 30;
+                                     timeText = "თვ";
+                                     if(duration > 11){
+                                         duration = duration / 12;
+                                         timeText = "წ";
+                                     }
+                                 }
+                             }
+                         }
               %>
               <div class="col-md-6">
                 <a class="card mb-3" style="max-width: 540px; border: 2px dashed rgb(255, 240, 0);" href="quiz?quiz=<%=quizId%>">

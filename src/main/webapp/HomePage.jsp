@@ -158,7 +158,6 @@
        List<Quiz> popularQuizzes = store.getPopularQuizzes(9);
        List<Quiz> recentQuizzes = store.getRecentQuizzes(9);
     %>
-
     <%if(request.getAttribute("curUser") != null){%>
             <div class="container">
                 <div class = "myQuizzes">
@@ -194,18 +193,18 @@
                             if(duration > 59){
                                 duration = duration / 60;
                                 timeText = "სთ";
-                            }
-                            if(duration > 23){
-                                duration = duration / 24;
-                                timeText = "დღ";
-                            }
-                            if(duration > 30){
-                                duration = duration / 30;
-                                timeText = "თვ";
-                            }
-                            if(duration > 11){
-                                duration = duration / 12;
-                                timeText = "წ";
+                                if(duration > 23){
+                                    duration = duration / 24;
+                                    timeText = "დღ";
+                                    if(duration > 30){
+                                        duration = duration / 30;
+                                        timeText = "თვ";
+                                        if(duration > 11){
+                                            duration = duration / 12;
+                                            timeText = "წ";
+                                        }
+                                    }
+                                }
                             }
                         %>
                             <a class="col" href="quiz?quiz=<%=quizId%>">
@@ -261,18 +260,18 @@
                         if(duration > 59){
                             duration = duration / 60;
                             timeText = "სთ";
-                        }
-                        if(duration > 23){
-                            duration = duration / 24;
-                            timeText = "დღ";
-                        }
-                        if(duration > 30){
-                            duration = duration / 30;
-                            timeText = "თვ";
-                        }
-                        if(duration > 11){
-                            duration = duration / 12;
-                            timeText = "წ";
+                            if(duration > 23){
+                                duration = duration / 24;
+                                timeText = "დღ";
+                                if(duration > 30){
+                                    duration = duration / 30;
+                                    timeText = "თვ";
+                                    if(duration > 11){
+                                        duration = duration / 12;
+                                        timeText = "წ";
+                                    }
+                                }
+                            }
                         }
                 %>
                     <a class="col" href="quiz?quiz=<%=quizId%>">
@@ -326,18 +325,18 @@
                         if(duration > 59){
                             duration = duration / 60;
                             timeText = "სთ";
-                        }
-                        if(duration > 23){
-                            duration = duration / 24;
-                            timeText = "დღ";
-                        }
-                        if(duration > 30){
-                            duration = duration / 30;
-                            timeText = "თვ";
-                        }
-                        if(duration > 11){
-                            duration = duration / 12;
-                            timeText = "წ";
+                            if(duration > 23){
+                                duration = duration / 24;
+                                timeText = "დღ";
+                                if(duration > 30){
+                                    duration = duration / 30;
+                                    timeText = "თვ";
+                                    if(duration > 11){
+                                        duration = duration / 12;
+                                        timeText = "წ";
+                                    }
+                                }
+                            }
                         }
                 %>
                     <a class="col" href="quiz?quiz=<%=quizId%>">

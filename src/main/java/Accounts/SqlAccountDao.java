@@ -115,7 +115,7 @@ public class SqlAccountDao implements AccountDao {
            statement.setString(1, acc.getUsername());
            statement.setString(2, acc.getPassword());
            statement.setInt(3, acc.getId());
-           System.out.println(acc.getEmail());
+           //System.out.println(acc.getEmail());
            statement.executeUpdate();
 
        } catch (SQLException e) {

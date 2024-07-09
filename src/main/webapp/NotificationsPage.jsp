@@ -74,6 +74,7 @@
                     for(int i = 0; i < notifications.size(); i++){
                         Notification notification = notifications.get(i);
                         int notification_id = notification.getId();
+                        int quizId = notification.getQuizId();
                         String title = notification.getType();
                         String text = notification.getText();
                         int from_id = notification.getFromId();
@@ -91,7 +92,7 @@
                   <h6 class="card-title"><%=title%></h6>
                   <p class="card-text"><%=name%><%=text%></p>
                   <p class="card-text"><small class="text-body-secondary">გამოგზავნილია 3 წუთის წინ</small></p>
-                      <form action="notifications?user=<%=from_id%>&notification=<%=notification_id%>&quiz=<%=notification_id%>" method="post" id="buttonStatus">
+                      <form action="notifications?user=<%=from_id%>&notification=<%=notification_id%>&quiz=<%=quizId%>" method="post" id="buttonStatus">
                       <% if(Objects.equals(title, Notification.FRIEND_REQUEST)){%>
                       <input type="hidden" id="admit" name="admit">
                       <button type="submit" class="btn btn-primary" onclick="setAttributeAndSubmit('admit')">დადასტურება</button>

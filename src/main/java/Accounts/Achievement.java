@@ -34,7 +34,7 @@ public class Achievement {
     public Achievement(int accountId, String type) {
         this.accountId = accountId;
         this.type = type;
-        this.text = null;
+        this.text = "";
         this.achievementId = NO_ID;
     }
 
